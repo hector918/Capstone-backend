@@ -5,10 +5,11 @@ app.use(cors({ credentials: true, origin: true }));
 // app.use(express.json());
 require('./session-config')(app);// init session
 
-// app.use(express.static("./frontend/starter-pern-crud/build"));
+app.use(express.static("./public"));
 
 app.use("/rc", require("./controllers/reading-comprehension"));
 // app.use("/ra", require("./controllers/reading-comprehension"));
+app.use("/upload_files", require("./controllers/upload-file"));
 
 /////////////////////////////////////////////
 app.get("*", (req, res) => {

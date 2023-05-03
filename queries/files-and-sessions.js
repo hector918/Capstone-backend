@@ -13,3 +13,16 @@ const db = require("../db/dbConfig.js");
 //     throw error;
 //   }
 // };
+
+
+/*
+  CREATE TABLE uploaded_files (
+    filehash VARCHAR(255) PRIMARY KEY,
+    Upload_date TIMESTAMP,
+    size BIGINT,
+    embedding_path VARCHAR(255),
+    sessionID VARCHAR(255)
+  );
+*/
+
+// module.exports = rc;

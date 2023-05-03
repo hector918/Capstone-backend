@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script defer>
+    function form_submit(evt) {
+      evt.preventDefault();
+      uploadFiles("testing",document.querySelector("#form_file_upload"));
+    }
+
+    window.onload = (evt) => {
+      console.log(document.querySelector("#form01"), document.querySelector("body"))
+      document.querySelector("#form01").addEventListener("submit", form_submit);
+    }
+    function uploadFiles(name, files) {
+      const formData = new FormData();
+      formData.append("name", name.value);
+      for (let i = 0; i < files.files.length; i++) {
+        formData.append("files", files.files[i]);
+      }
+      fetch("http://localhost:4000/upload_files", {
+        method: 'POST',
+        body: formData
+      })
+        .then((res) => console.log(res))
+        .catch((err) => ("Error occured", err));
+    }
+    function uploadFile(input) {
+      // var input = document.getElementById("file");
+      var file = input.files[0];
+      var xhr = new XMLHttpRequest();
+      var formData = new FormData();
+
+      formData.append("file", file);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            //{"prompt_tokens": 5511, "total_tokens": 5511, "filename": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "result": "File processed."}
+            globe_var['document'] = JSON.parse(xhr.responseText);
+            document.getElementById("response").innerHTML = xhr.responseText;
+          } else {
+            document.getElementById("response").innerHTML = "Error: " + xhr.status;
+          }
+        }
+      };
+
+      xhr.open("POST", `upload_files/${file.name}`, true);
+      xhr.send(formData);
+    }
+  </script>
+</head>
+
+<body>
+  <form action="./upload_files" id="form01">
+    <input type="file" id="form_file_upload" multiple/>
+    <input type="submit" />
+  </form>
+</body>
+
+</html>

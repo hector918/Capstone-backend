@@ -5,19 +5,20 @@ const [ max_token_for_embedding, max_token_for_completion ] = [2000, 2000];
 //web api Entrance////////////////////////////////////////////////////
 rc.get("/", async (req, res)=>{
   //
-  res.send("Dsads")
+  res.send("get is not for you, use post instead");
 })
 
 rc.post("/", async (req, res)=>{
   //reading body
   const {q, filehash} = req.body;
-  if(q === undefined || q.length < 2) return;
   //error handling
   try {
+    if(q === undefined || q.length < 2) throw "question invaild";
     //getting embedding of question
     const embedding_q = embedding_result_templete(q, await get_embedding(q));
     //reading related embedding file base on hash,
     const embeddings = process_addressing_file(filehash);
+    if(embeddings === false) throw "file not found";
     //getting the similarity and repack the asnwer related text to context
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
     //sending out the completion request to openai
@@ -32,10 +33,9 @@ rc.post("/", async (req, res)=>{
     else{
       res.send(JSON.stringify({result:"something went wrong, contact admin"}));
     }
-    
   } catch (error) {
-    console.log(error)
-    res.send({result:"failed", message:"api access failed"});
+    console.log(error);
+    res.send(JSON.stringify({result:"failed", error}));
   }
 })
 ///helper section///////////////////////////////////////////////////
@@ -59,7 +59,7 @@ function process_with_similarity(question_embedding, embeddings){
   embeddings = embeddings.map(({text, usage, embedding})=>{
     return {text, usage, embedding, similarity: cosineDistance(question_embedding.embedding, embedding)};
   })
-  //sort the embedding
+  //sort the embeddings
   embeddings.sort((a, b)=> a.similarity > b.similarity ? -1 : 1 );
   let [cur_len, cur_pointer] = [0, 0];
   //picking anwer related text

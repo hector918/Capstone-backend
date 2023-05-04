@@ -4,13 +4,13 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const crypto = require('crypto');
 const fs = require('fs');
-//////////////////////////////////////////////////////
+//express operation enterance////////////////////////////////////////////////////
 uf.post("/", upload.array("files"), async (req, res)=>{
   if(req.files?.length > 0){
-    //enterance 
+    //only process first file from req 
     let ret = await process_file(req.files[0].path, req.files[0]);
     //respond
-    res.json({...ret, message: "Successfully uploaded files" });
+    res.json({...ret, message: "Successfully uploaded"});
   }else{
     res.json({message: "no file receive" });
   }
@@ -44,14 +44,14 @@ async function process_file(filepath, meta_data){
         text = fs.readFileSync(`${processed_file_path}${fileHash}/${fileHash}`, 'utf8')
     }
     //next split text
-    const text_arr = text_splitter(text, 1000, 100, str => str.replace(/[\n\s]+/g, " "));
-    const {get_embedding} = require('./wrapped-api');
+    const text_arr = text_splitter(text, 700, 100, str => str.replace(/[\n\s]+/g, " "));
     //embedding
+    const {get_embedding, embedding_result_templete} = require('./wrapped-api');
     let total_usage = 0;
     const embedding = await Promise.all(text_arr.map(async el => {
       let data = await get_embedding(el);
       total_usage += data.usage.total_tokens;
-      return {text: el, usage: data.usage, embedding: data.data[0].embedding};
+      return embedding_result_templete(el, data);
     }));
     //to file
     //save usage to folder
@@ -67,6 +67,7 @@ async function pdf2text(filepath){
   const content = fs.readFileSync(filepath);
   //parse the pdf to text
   let ret = await require('pdf-parse')( content );
+  //return the text
   return ret.text || false;
 }
 

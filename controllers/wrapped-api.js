@@ -1,21 +1,24 @@
-const {Configuration, OpenAIApi} = require("openai");
-const {openai_api_key} = require('../token/token');
-const openai = new OpenAIApi(new Configuration({apiKey: openai_api_key}));
+const { Configuration, OpenAIApi } = require("openai");
+const { openai_api_key } = require("../token.js");
+const openai = new OpenAIApi(new Configuration({ apiKey: openai_api_key }));
 //core function of openAI////////////////////////////////////////////////////////
-async function get_embedding(prompt){
+async function get_embedding(prompt) {
   try {
     const ret = await openai.createEmbedding({
       input: prompt,
-      model: 'text-embedding-ada-002',
+      model: "text-embedding-ada-002",
     });
     return ret.data;
   } catch (error) {
-    console.log('openai get_embedding error: ', error?.responsea?.data || false);
+    console.log(
+      "openai get_embedding error: ",
+      error?.responsea?.data || false
+    );
     return false;
   }
 }
 
-async function list_models(){
+async function list_models() {
   try {
     const completion = await openai.listModels({});
     return completion.data.data;
@@ -25,18 +28,24 @@ async function list_models(){
   }
 }
 
-async function chatCompletion(question, context, max_token){
+async function chatCompletion(question, context, max_token) {
   try {
     const completion = await openai.createChatCompletion({
-      model : "gpt-3.5-turbo",
-      temperature : 0,
-      max_tokens : max_token,
-      frequency_penalty : 0,
-      presence_penalty : 0,
-      messages : [
-        {"role": "system", "content": "You are reading comprehension AI robot assistant"},
-        {"role": "user", "content": `Answer the question based on the context below give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext: ${context}\n\n---\n\nQuestion: ${question}\nAnswer:`}
-      ]
+      model: "gpt-3.5-turbo",
+      temperature: 0,
+      max_tokens: max_token,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      messages: [
+        {
+          role: "system",
+          content: "You are reading comprehension AI robot assistant",
+        },
+        {
+          role: "user",
+          content: `Answer the question based on the context below give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext: ${context}\n\n---\n\nQuestion: ${question}\nAnswer:`,
+        },
+      ],
     });
     return completion.data;
   } catch (error) {
@@ -51,13 +60,19 @@ async function chatCompletion(question, context, max_token){
 }
 
 //helper below////////////////////////////////////////////
-function embedding_result_templete(text, raw_res){
-  return {text: text, usage: raw_res.usage, embedding: raw_res.data[0].embedding}
+function embedding_result_templete(text, raw_res) {
+  return {
+    text: text,
+    usage: raw_res.usage,
+    embedding: raw_res.data[0].embedding,
+  };
 }
 
-function cosineDistance(u, v, w=null) {
+function cosineDistance(u, v, w = null) {
   // Check if the arrays have the same length
-  if (u.length !== v.length) { throw "Arrays must have the same length"; }
+  if (u.length !== v.length) {
+    throw "Arrays must have the same length";
+  }
   // Compute the dot product of u and v
   let dotProduct = 0;
   for (let i = 0; i < u.length; i++) {
@@ -80,11 +95,16 @@ function cosineDistance(u, v, w=null) {
     }
   }
   // Compute the cosine distance
-  return dotProduct / (Math.sqrt(magnitudeU) * Math.sqrt(magnitudeV));;
+  return dotProduct / (Math.sqrt(magnitudeU) * Math.sqrt(magnitudeV));
 }
 
-
-module.exports = { get_embedding, cosineDistance, embedding_result_templete, list_models, chatCompletion }
+module.exports = {
+  get_embedding,
+  cosineDistance,
+  embedding_result_templete,
+  list_models,
+  chatCompletion,
+};
 
 /* //list model result example
 [

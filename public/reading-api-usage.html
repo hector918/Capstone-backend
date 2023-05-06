@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Api usage</title>
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+  <script defer>
+    window.onload = (evt) => {
+      read_api();
+    }
+    function read_api(){
+      const header = {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        // credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        // redirect: "follow", // manual, *follow, error
+        // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        // body: JSON.stringify(data), // body data type must match "Content-Type" header
+      }
+      fetch(`./rau`, header).then(response => response.json())
+      .then(data => {
+        let timeline_parent = document.querySelector("#timeline-div");
+        timeline_parent.innerHTML = "";
+        for(let row of data){
+          timeline_parent.append(add_timeline_item(row));
+        }
+      })
+      .catch(error => console.log(error));
+    }
+    ////////////
+    function add_timeline_item(json){
+      let div = document.createElement("div");
+      let id_prefix = "timeline-item-";
+      div.classList.add("timeline-item");
+      div.id = id_prefix + json.id;
+      div.innerHTML = `
+        <div class="timeline-left">
+          <a class="timeline-icon  icon-lg tooltip" href="#${id_prefix + json.id}" data-tooltip="${json.timestamp}">
+            <i class="icon icon-check"></i>
+          </a>
+        </div>
+        <div class="timeline-content">
+          <div class="tile-content">
+            <p class="tile-subtitle">${json.timestamp}</p>
+            <p class="tile-title">${json.caller}</p>
+            <p class="tile-title"><a href="">User input</a>: ${json.user_input}</p>
+            <p class="tile-title"><a href="">usage</a>: ${json.req_usage}</p>
+          </div>
+        </div>`;
+      return div;
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="columns">
+      <div class="column" style="padding: 50px;">
+        <div class="timeline" id="timeline-div">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

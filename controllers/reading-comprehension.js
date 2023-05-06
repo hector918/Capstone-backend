@@ -10,15 +10,20 @@ rc.get("/", async (req, res)=>{
 })
 
 rc.post("/", async (req, res)=>{
+  //record api usage to db
+  const {insert_to_api_usage} = require('../queries/api-usage');
+  
   //reading body
   let {q, filehash} = req.body;
   //check user input
   q = user_input_filter(q);
   //error handling
   try {
-    if(q === undefined || q.length < 4) throw "question invaild";
+    if(q === undefined || q.length < 4 || q.length > 512) throw "question invaild";
     //getting embedding of question
     const embedding_q = embedding_result_templete(q, await get_embedding(q));
+    //record api usage
+    insert_to_api_usage({user_name:req.sessionID, user_input:q, caller:'reading-comprehension-embedding', json:{}, req_usage:embedding_q.usage.total_tokens});
     //reading related embedding file base on hash,
     const embeddings = process_addressing_file(filehash);
     if(embeddings === false) throw "file not found";
@@ -32,6 +37,8 @@ rc.post("/", async (req, res)=>{
       console.log(usage, choices);
       //respond
       res.send(JSON.stringify(completion));
+      //record api usage
+      insert_to_api_usage({user_name:req.sessionID, user_input:q, caller:'reading-comprehension-completion', json:completion, req_usage:usage.total_tokens});
     }
     else{
       res.send(JSON.stringify({result:"something went wrong, contact admin"}));
@@ -44,6 +51,7 @@ rc.post("/", async (req, res)=>{
 ///helper section///////////////////////////////////////////////////
 function process_addressing_file(filehash){
   const fs = require("fs");
+  // preparing file name and path
   const folder_path = `${__dirname}/../text-files/${filehash}`;
   const embedding_filename = `${folder_path}/embedding-${filehash}.json`;
   //check file exists

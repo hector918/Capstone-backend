@@ -1,4 +1,5 @@
 /node_modules
 /uploads
+/text-files
 .env
 token.js

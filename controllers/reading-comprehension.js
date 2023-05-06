@@ -1,6 +1,7 @@
 const express = require("express");
 const rc = express.Router();
 const {get_embedding, cosineDistance, embedding_result_templete, chatCompletion} = require('./wrapped-api');
+const {user_input_filter} = require('./str-filter');
 const [ max_token_for_embedding, max_token_for_completion ] = [2000, 2000];
 //web api Entrance////////////////////////////////////////////////////
 rc.get("/", async (req, res)=>{
@@ -10,10 +11,12 @@ rc.get("/", async (req, res)=>{
 
 rc.post("/", async (req, res)=>{
   //reading body
-  const {q, filehash} = req.body;
+  let {q, filehash} = req.body;
+  //check user input
+  q = user_input_filter(q);
   //error handling
   try {
-    if(q === undefined || q.length < 2) throw "question invaild";
+    if(q === undefined || q.length < 4) throw "question invaild";
     //getting embedding of question
     const embedding_q = embedding_result_templete(q, await get_embedding(q));
     //reading related embedding file base on hash,
@@ -56,13 +59,13 @@ function process_addressing_file(filehash){
 function process_with_similarity(question_embedding, embeddings){
   if(!question_embedding || !embeddings) return false;
   //Create a context for a question by finding the most similar context from the dataframe
-  embeddings = embeddings.map(({text, usage, embedding})=>{
+  embeddings = embeddings.map(({text, usage, embedding}) => {
     return {text, usage, embedding, similarity: cosineDistance(question_embedding.embedding, embedding)};
   })
-  //sort the embeddings
-  embeddings.sort((a, b)=> a.similarity > b.similarity ? -1 : 1 );
+  //sort embeddings with similarity
+  embeddings.sort((a, b) => a.similarity > b.similarity ? -1 : 1 );
   let [cur_len, cur_pointer] = [0, 0];
-  //picking anwer related text
+  //picking answer from related text
   for(let x of embeddings){
     cur_len += x.usage.total_tokens;
     if(cur_len > max_token_for_embedding) break;

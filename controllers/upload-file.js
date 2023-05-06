@@ -9,8 +9,12 @@ uf.post("/", upload.array("files"), async (req, res)=>{
   if(req.files?.length > 0){
     //only process first file from req 
     let ret = await process_file(req.files[0].path, req.files[0]);
+    
     //respond
     res.json({...ret, message: "Successfully uploaded"});
+    //record api usage to db
+    const {insert_to_api_usage} = require('../queries/api-usage');
+    insert_to_api_usage({user_name:req.sessionID, user_input:req.files[0].originalname, caller:'upload-file-embedding', json:{filehash: ret.fileHash}, req_usage:ret.usage});
   }else{
     res.json({message: "no file receive" });
   }

@@ -1,1 +1,37 @@
-const db = require("../db/dbConfig.js");
+const db = require("../queries/db-config");
+
+const insert_to_api_usage = async (body) => {
+  //only accept below key name
+  const templete = {"user_name":"text", "user_input":"text", "caller":"text", "json":"object", "req_usage":"number", "url":"text"};
+  const [col_name, val] = [[], []];
+  //checking column name
+  for(let x in body) if(templete[x]){
+    col_name.push(x);
+    val.push(`$[${x}]`);
+  }
+  //if not matching exit
+  if(col_name.length === 0) return false;
+  try {
+    //insert to db
+    const ret = await db.one(`INSERT INTO api_usage (${col_name.join(", ")}) VALUES (${val.join(", ")}) RETURNING *`, body);
+    return ret;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {insert_to_api_usage }
+
+/*
+DROP TABLE IF EXISTS api_usage;
+CREATE TABLE api_usage (
+    id SERIAL PRIMARY KEY,
+    user_name TEXT,
+    timestamp TIMESTAMP DEFAULT NOW(),
+    user_input TEXT,
+    caller TEXT,
+    url TEXT,
+    json JSON,
+    req_usage INTEGER
+);
+*/

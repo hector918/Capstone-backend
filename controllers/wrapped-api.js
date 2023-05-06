@@ -1,5 +1,5 @@
 const {Configuration, OpenAIApi} = require("openai");
-const {openai_api_key} = require('../token');
+const {openai_api_key} = require('../token/token');
 const openai = new OpenAIApi(new Configuration({apiKey: openai_api_key}));
 //core function of openAI////////////////////////////////////////////////////////
 async function get_embedding(prompt){

@@ -59,6 +59,21 @@ async function chatCompletion(question, context, max_token) {
   }
 }
 
+//kayrn's work
+async function get_an_image(prompt) {
+  try {
+    const response = await openai.createImage({
+      prompt: prompt,
+      n: 1,
+      size: "512x512",
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error.response.data.error);
+    return false;
+  }
+}
+
 //helper below////////////////////////////////////////////
 function embedding_result_templete(text, raw_res) {
   return {
@@ -104,6 +119,7 @@ module.exports = {
   embedding_result_templete,
   list_models,
   chatCompletion,
+  get_an_image,
 };
 
 /* //list model result example

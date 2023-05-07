@@ -1,22 +1,22 @@
 const express = require("express");
 const ra = express.Router();
+const { get_an_image } = require('./wrapped-api');
+const {user_input_filter} = require('./str-filter');
+const {insert_to_api_usage} = require('../queries/api-usage');
 
-const { askAquestion } = require("../queries/api-usage.js");
-const { get_an_image } = require("./text-to-image-prompt.js");
+//karyn's work
 ra.post("/image", async (req, res) => {
-  const { question } = req.body;
-
-  const result = await get_an_image("cute bunny");
-  console.log(result)
-  console.log(Object.keys(result), result.response.data.error);
-  res.send(JSON.stringify(result));
-  // console.log("testing in ra");
-  // try {
-  //   const recieveQuestion = await askAquestion(req.body);
-  //   res.json(recieveQuestion);
-  // } catch (error) {
-  //   res.status(400).json({ error: error });
-  // }
+  try {
+    let {q} = req.body;
+    question = user_input_filter(q);
+    if(question === "" || question.length < 4 || question.length > 1000) throw "question invaild";
+    const ret = await get_an_image(q);
+    insert_to_api_usage({user_name: req.sessionID, user_input: q, caller: 'reading-assistance-text-to-image', json: ret});
+    res.json({result: "success", image_url: ret.data[0].url});
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
 });
 
 module.exports = ra;

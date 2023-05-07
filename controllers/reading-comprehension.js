@@ -19,7 +19,7 @@ rc.post("/", async (req, res)=>{
   q = user_input_filter(q);
   //error handling
   try {
-    if(q === undefined || q.length < 4 || q.length > 512) throw "question invaild";
+    if(q === false || q.length < 4 || q.length > 512) throw "question invaild";
     //getting embedding of question
     const embedding_q = embedding_result_templete(q, await get_embedding(q));
     //record api usage

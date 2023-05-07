@@ -10,7 +10,7 @@ ra.post("/image", async (req, res) => {
     let {q} = req.body;
     //pre filter the user input
     question = user_input_filter(q);
-    if(question === "" || question.length < 4 || question.length > 1000) throw "question invaild";
+    if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";
     //call open ai api
     const ret = await get_an_image(q);
     //record api usage

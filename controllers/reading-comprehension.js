@@ -4,10 +4,6 @@ const {get_embedding, cosineDistance, embedding_result_templete, chatCompletion}
 const {user_input_filter} = require('./str-filter');
 const [ max_token_for_embedding, max_token_for_completion ] = [2000, 2000];
 //web api Entrance////////////////////////////////////////////////////
-rc.get("/", async (req, res)=>{
-  //
-  res.send("get is not for you, use post instead");
-})
 
 rc.post("/", async (req, res)=>{
   //record api usage to db
@@ -23,7 +19,13 @@ rc.post("/", async (req, res)=>{
     //getting embedding of question
     const embedding_q = embedding_result_templete(q, await get_embedding(q));
     //record api usage
-    insert_to_api_usage({user_name:req.sessionID, user_input:q, caller:'reading-comprehension-embedding', json:{}, req_usage:embedding_q.usage.total_tokens});
+    insert_to_api_usage({
+      user_name: req.sessionID, 
+      user_input: q, 
+      caller: 'reading-comprehension-embedding', 
+      json: {}, 
+      req_usage: embedding_q.usage.total_tokens
+    });
     //reading related embedding file base on hash,
     const embeddings = process_addressing_file(filehash);
     if(embeddings === false) throw "file not found";
@@ -34,11 +36,17 @@ rc.post("/", async (req, res)=>{
     //if result is Legit
     if(completion) {
       const {id, usage, choices} = completion;
-      console.log(usage, choices);
+      console.log(completion);
       //respond
       res.send(JSON.stringify(completion));
       //record api usage
-      insert_to_api_usage({user_name:req.sessionID, user_input:q, caller:'reading-comprehension-completion', json:completion, req_usage:usage.total_tokens});
+      insert_to_api_usage({
+        user_name: req.sessionID, 
+        user_input: q, 
+        caller: 'reading-comprehension-completion', 
+        json: completion, 
+        req_usage: usage.total_tokens
+      });
     }
     else{
       res.send(JSON.stringify({result:"something went wrong, contact admin"}));

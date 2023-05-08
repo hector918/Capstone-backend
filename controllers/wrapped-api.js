@@ -69,7 +69,7 @@ async function get_an_image(prompt) {
     });
     return response.data;
   } catch (error) {
-    console.log(error.response.data.error);
+    console.log(error.response?.data?.error);
     return false;
   }
 }

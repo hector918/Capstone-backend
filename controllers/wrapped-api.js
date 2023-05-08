@@ -74,6 +74,34 @@ async function get_an_image(prompt) {
   }
 }
 
+// jeans work
+async function explainText(words, max_token) {
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 0,
+      max_tokens: max_token,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      messages: [
+        {
+          role: "user",
+          content: `Explain this word/sentence to me "${words}" and if the question can't be answered say \"I don't know\"\n\nAnswer:`,
+        },
+      ],
+    });
+    return completion.data;
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response.status);
+      console.log(error.response.data);
+    } else {
+      console.log(error.message);
+    }
+    return false;
+  }
+}
+
 //helper below////////////////////////////////////////////
 function embedding_result_templete(text, raw_res) {
   return {
@@ -120,6 +148,7 @@ module.exports = {
   list_models,
   chatCompletion,
   get_an_image,
+  explainText
 };
 
 /* //list model result example

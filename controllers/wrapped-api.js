@@ -75,7 +75,7 @@ async function get_an_image(prompt) {
 }
 
 // jeans work
-async function explainText(words, max_token) {
+async function explainText(words, max_token = 2000) {
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",

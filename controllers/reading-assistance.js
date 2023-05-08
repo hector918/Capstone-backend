@@ -35,7 +35,7 @@ ra.post("/text", async (req, res) => {
     const ret = await explainText(q);
     //record api usage
     insert_to_api_usage({user_name: req.sessionID, user_input: q, caller: 'reading-assistance-text-explaination', json: ret});
-    const answer = ret?.choices?.[0]?.message?.content
+    const answer = ret?.choices?.[0]?.message?.content;
     res.json({result: "success", data: answer});
   } catch (error) {
     console.log(error);

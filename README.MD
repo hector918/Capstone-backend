@@ -1,3 +1,3 @@
 
-![Alt text](./controllers_brief.svg)
+![Alt text](flow chart)
 <img src="./capstone-backend.svg">

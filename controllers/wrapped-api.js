@@ -1,6 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 const { openai_api_key } = require("../token.js");
 const openai = new OpenAIApi(new Configuration({ apiKey: openai_api_key }));
+console.log(openai_api_key)
 //core function of openAI////////////////////////////////////////////////////////
 async function get_embedding(prompt) {
   try {

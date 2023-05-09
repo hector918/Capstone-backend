@@ -5,7 +5,7 @@ const cors = require("cors");
 
 app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.json());
 require('./session-config')(app);// init session
 
 app.use(express.static("./public"));

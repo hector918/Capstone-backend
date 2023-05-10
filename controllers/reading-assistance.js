@@ -28,6 +28,8 @@ ra.post("/image", async (req, res) => {
 ra.post("/text", async (req, res) => {
   try {
     let {q} = req.body;
+    console.log(req.body)
+
     //pre filter the user input
     question = user_input_filter(q);
     if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";

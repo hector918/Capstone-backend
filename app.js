@@ -13,6 +13,7 @@ app.use(express.static("./public"));
 app.use("/rc", require("./controllers/reading-comprehension"));
 app.use("/ra", require("./controllers/reading-assistance"));
 app.use("/upload_files", require("./controllers/upload-file"));
+app.use("/download_file", require("./controllers/download-file"));
 app.use("/rau", require("./controllers/read-api-usage"));
 
 /////////////////////////////////////////////

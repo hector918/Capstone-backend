@@ -10,7 +10,7 @@ rc.post("/", async (req, res)=>{
   const {insert_to_api_usage} = require('../queries/api-usage');
   
   //reading body
-  let {q, filehash} = req.body;
+  let {q, fileHash} = req.body;
   //check user input
   q = user_input_filter(q);
   //error handling
@@ -27,7 +27,7 @@ rc.post("/", async (req, res)=>{
       req_usage: embedding_q.usage.total_tokens
     });
     //reading related embedding file base on hash,
-    const embeddings = process_addressing_file(filehash);
+    const embeddings = process_addressing_file(fileHash);
     if(embeddings === false) throw "file not found";
     //getting the similarity and repack the asnwer related text to context
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
@@ -63,6 +63,7 @@ function process_addressing_file(filehash){
   const folder_path = `${__dirname}/../text-files/${filehash}`;
   const embedding_filename = `${folder_path}/embedding-${filehash}.json`;
   //check file exists
+  console.log(folder_path, fs.existsSync(folder_path), embedding_filename, fs.existsSync(embedding_filename));
   if(!fs.existsSync(folder_path) || !fs.existsSync(embedding_filename)) return false;
   try {
     return JSON.parse(fs.readFileSync(embedding_filename));

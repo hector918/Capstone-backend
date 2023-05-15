@@ -28,8 +28,9 @@ async function list_models() {
   }
 }
 
-async function chatCompletion(question, context, max_token) {
+async function chatCompletion(question, context, max_token, level = undefined) {
   try {
+    ///level need to fill
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       temperature: 0,

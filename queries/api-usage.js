@@ -17,6 +17,7 @@ const insert_to_api_usage = async (body) => {
     return ret;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };
 
@@ -25,6 +26,7 @@ const read_api_usage = async (start = 0, limit = 100) => {
     return await db.any(`SELECT * FROM api_usage ORDER BY timestamp DESC OFFSET $[start] LIMIT $[limit];`, { start, limit });
   } catch (error) {
     console.log(error);
+    return false;
   }
 }
 

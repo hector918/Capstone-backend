@@ -101,6 +101,16 @@ async function explainText(words, max_token = 2000) {
     }
     return false;
   }
+  /* result example
+    {
+      id: 'chatcmpl-7GWWlbCsQ7E6BiGmpiXaNk4Ex1r2W',
+      object: 'chat.completion',
+      created: 1684172639,
+      model: 'gpt-3.5-turbo-0301',
+      usage: { prompt_tokens: 38, completion_tokens: 12, total_tokens: 50 },
+      choices: [ { message: [Object], finish_reason: 'stop', index: 0 } ]
+    }
+    */
 }
 
 //helper below////////////////////////////////////////////

@@ -13,9 +13,11 @@ uf.post("/", upload.array("files"), async (req, res)=>{
     //respond
     res.json({...ret, message: "Successfully uploaded"});
 
-    //record api usage to db
-    const {insert_to_api_usage} = require('../queries/api-usage');
-    insert_to_api_usage({user_name:req.sessionID, user_input:req.files[0].originalname, caller:'upload-file-embedding', json:{filehash: ret.fileHash}, req_usage:ret.usage});
+    if(ret["usage"]){//if file is new uploaded
+      //record api usage to db
+      const {insert_to_api_usage} = require('../queries/api-usage');
+      insert_to_api_usage({user_name:req.sessionID, user_input:req.files[0].originalname, caller:'upload-file-embedding', json:{filehash: ret.fileHash}, req_usage:ret.usage});
+    }
   }else{
     res.json({message: "no file receive" });
   }
@@ -30,7 +32,7 @@ async function process_file(filepath, meta_data){
   if(fs.existsSync(`${processed_file_path}${fileHash}`)){
     //if exists
     fs.unlinkSync(filepath);
-    return {result:"sucess", fileHash};
+    return {result:"success", fileHash};
   }else{
     //if not exists
     //making folder
@@ -63,7 +65,7 @@ async function process_file(filepath, meta_data){
     fs.writeFileSync(`${processed_file_path}${fileHash}/${total_usage}.usage`, "");
     //save embedding to folder
     fs.writeFileSync(`${processed_file_path}${fileHash}/embedding-${fileHash}.json`, JSON.stringify(embedding));
-    return {result: "sucess", usage: total_usage, fileHash};
+    return {result: "success", usage: total_usage, fileHash};
   }
 }
 

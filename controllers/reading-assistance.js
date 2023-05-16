@@ -35,8 +35,10 @@ ra.post("/text", async (req, res) => {
     if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";
     //call open ai api
     const ret = await explainText(q);
+    
+    console.log(ret);
     //record api usage
-    insert_to_api_usage({user_name: req.sessionID, user_input: q, caller: 'reading-assistance-text-explaination', json: ret});
+    insert_to_api_usage({user_name: req.sessionID, user_input: q, caller: 'reading-assistance-text-explaination', json: ret, req_usage: ret.usage.total_tokens});
     const answer = ret?.choices?.[0]?.message?.content;
     res.json({result: "success", data: answer});
   } catch (error) {

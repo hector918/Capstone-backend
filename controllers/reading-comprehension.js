@@ -10,7 +10,7 @@ rc.post("/", async (req, res)=>{
   const {insert_to_api_usage} = require('../queries/api-usage');
   
   //reading body
-  let {q, fileHash} = req.body;
+  let {q, fileHash, level} = req.body;
   //check user input
   q = user_input_filter(q);
   //error handling
@@ -32,7 +32,7 @@ rc.post("/", async (req, res)=>{
     //getting the similarity and repack the asnwer related text to context
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
     //sending out the completion request to openai
-    const completion = await chatCompletion(q, context, max_token_for_completion);
+    const completion = await chatCompletion(q, context, max_token_for_completion, level);
     //if result is Legit
     if(completion) {
       const {id, usage, choices} = completion;

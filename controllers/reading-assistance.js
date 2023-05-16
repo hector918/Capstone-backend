@@ -15,7 +15,13 @@ ra.post("/image", async (req, res) => {
     //call open ai api
     const ret = await get_an_image(q);
     //record api usage
-    insert_to_api_usage({user_name: req.sessionID, user_input: q, caller: 'reading-assistance-text-to-image', json: ret});
+    insert_to_api_usage({
+      user_name: req.sessionID, 
+      user_input: q, 
+      caller: 'reading-assistance-text-to-image', 
+      json: ret,
+      ip_address: req.socket.remoteAddress
+    });
     //respond
     res.json({result: "success", image_url: ret.data[0].url});
   } catch (error) {
@@ -38,7 +44,14 @@ ra.post("/text", async (req, res) => {
     
     console.log(ret);
     //record api usage
-    insert_to_api_usage({user_name: req.sessionID, user_input: q, caller: 'reading-assistance-text-explaination', json: ret, req_usage: ret.usage.total_tokens});
+    insert_to_api_usage({
+      user_name: req.sessionID, 
+      user_input: q, 
+      caller: 'reading-assistance-text-explaination', 
+      json: ret, 
+      req_usage: ret.usage.total_tokens,
+      ip_address: req.socket.remoteAddress
+    });
     const answer = ret?.choices?.[0]?.message?.content;
     res.json({result: "success", data: answer});
   } catch (error) {

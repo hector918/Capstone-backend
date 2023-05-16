@@ -2,7 +2,7 @@ const db = require("../queries/db-config");
 
 const insert_to_api_usage = async (body) => {
   //only accept below key name
-  const templete = {"user_name":"text", "user_input":"text", "caller":"text", "json":"object", "req_usage":"number", "url":"text"};
+  const templete = {"user_name":"text", "user_input":"text", "caller":"text", "json":"object", "req_usage":"number", "url":"text", "ip_address":"text"};
   const [col_name, val_name] = [[], []];
   //checking column name
   for(let x in body) if(templete[x]){
@@ -42,7 +42,38 @@ CREATE TABLE api_usage (
     caller TEXT,
     url TEXT,
     json JSON,
-    req_usage INTEGER
+    req_usage INTEGER,
+    "ip_address" varchar(50),
 );
+-- -------------------------------------------------------------
+-- TablePlus 5.3.6(496)
+--
+-- https://tableplus.com/
+--
+-- Database: capstone_project
+-- Generation Time: 2023-05-16 17:49:07.6810
+-- -------------------------------------------------------------
+
+
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Sequence and defined type
+CREATE SEQUENCE IF NOT EXISTS api_usage_id_seq;
+
+-- Table Definition
+CREATE TABLE "public"."api_usage" (
+    "id" int4 NOT NULL DEFAULT nextval('api_usage_id_seq'::regclass),
+    "user_name" text,
+    "timestamp" timestamp DEFAULT now(),
+    "user_input" text,
+    "caller" text,
+    "url" text,
+    "json" json,
+    "req_usage" int4,
+    "ip_address" varchar(50),
+    PRIMARY KEY ("id")
+);
+
+
 */
 

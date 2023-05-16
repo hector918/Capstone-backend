@@ -24,7 +24,8 @@ rc.post("/", async (req, res)=>{
       user_input: q, 
       caller: 'reading-comprehension-embedding', 
       json: {}, 
-      req_usage: embedding_q.usage.total_tokens
+      req_usage: embedding_q.usage.total_tokens,
+      ip_address: req.socket.remoteAddress
     });
     //reading related embedding file base on hash,
     const embeddings = process_addressing_file(fileHash);
@@ -45,7 +46,8 @@ rc.post("/", async (req, res)=>{
         user_input: q, 
         caller: 'reading-comprehension-completion', 
         json: completion, 
-        req_usage: usage.total_tokens
+        req_usage: usage.total_tokens,
+        ip_address: req.socket.remoteAddress
       });
     }
     else{

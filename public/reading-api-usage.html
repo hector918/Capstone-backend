@@ -29,45 +29,91 @@
       fetch(`./rau`, header).then(response => response.json())
       .then(data => {
         let timeline_parent = document.querySelector("#timeline-div");
+        let calendar_clicker = document.querySelector("#calendar-clicker-div");
         timeline_parent.innerHTML = "";
-        for(let row of data){
-          timeline_parent.append(add_timeline_item(row));
+        calendar_clicker.innerHTML = "";
+        let timeline_data = reorganize_data(data);
+        for(let date in timeline_data){
+          timeline_parent.append(add_timeline_item(date, timeline_data[date]));
+          calendar_clicker.append(add_calender_item(date));
         }
       })
       .catch(error => console.log(error));
+      function reorganize_data(data){
+        const ret = {};
+        for(let row of data){
+          let row_date = row.timestamp.split("T")[0];
+          ret[row_date] = [...ret[row_date] || [], row];
+        }
+        return ret;
+      }
+    }
+    /////////////
+    function add_calender_item(d){
+      let id_prefix = "timeline-item-";
+      let div = document.createElement("div");
+      div.innerHTML = `<a href='#${id_prefix + d}'>${d}</a>`;
+      return div;
     }
     ////////////
-    function add_timeline_item(json){
+    function add_timeline_item(d, row){
       let div = document.createElement("div");
       let id_prefix = "timeline-item-";
       div.classList.add("timeline-item");
-      div.id = id_prefix + json.id;
+      div.id = id_prefix + d;
       div.innerHTML = `
         <div class="timeline-left">
-          <a class="timeline-icon  icon-lg tooltip" href="#${id_prefix + json.id}" data-tooltip="${json.timestamp}">
+          <a class="timeline-icon  icon-lg tooltip" href="#${id_prefix + d}" data-tooltip="${d}">
             <i class="icon icon-check"></i>
           </a>
         </div>
         <div class="timeline-content">
           <div class="tile-content">
-            <p class="tile-subtitle">${json.timestamp}</p>
-            <p class="tile-title">${json.caller}</p>
-            <p class="tile-title"><a href="">User input</a>: ${json.user_input}</p>
-            <p class="tile-title"><a href="">usage</a>: ${json.req_usage}</p>
+            <h5 class="tile-subtitle">${d} - Total token usage: ${row.reduce((acc, cv) => acc + Number(cv.req_usage), 0)}</h5>
+            ${create_sub_content(row)}
           </div>
         </div>`;
       return div;
+      function create_sub_content(row){
+        return row.map(el => `<div class='columns col-gapless'>
+          <div class='column'>${convert_time_UTC_to_local(el.timestamp).split(',').join("<br>")}</div>
+          <div class='column'>${el.ip_address}</div>
+          <div class='column'>${el.caller}</div>
+          <div class='column'>${el.user_input}</div>
+          <div class='column col-1' style='text-align:right;'>${el.req_usage}</div>
+        </div>`).join("");
+      }
+    }
+    function convert_time_UTC_to_local(utcTime){
+      // Convert UTC time to local time
+      return (new Date(utcTime)).toLocaleString();
     }
   </script>
+  <style>
+    body, .container, .full-height-columns{
+      height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      overscroll-behavior: none;
+    }
+    .full-height-column{
+      height: 100%;
+      overflow-y: scroll;
+    }
+    #calendar-clicker-div{
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <div class="columns">
-      <div class="column" style="padding: 50px;">
-        <div class="timeline" id="timeline-div">
-          
-        </div>
+    <div class="columns col-gapless full-height-columns">
+      <div class="column col-10 col-mx-auto full-height-column" style="padding: 50px;background-color: #ededed;">
+        <div class="timeline" id="timeline-div"></div>
       </div>
+      <div class="column col-2 full-height-column" style="background-color: lightgrey;"><div id="calendar-clicker-div"></div>
     </div>
   </div>
 </body>

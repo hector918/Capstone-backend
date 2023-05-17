@@ -11,7 +11,6 @@
       evt.preventDefault();
       uploadFiles("testing",document.querySelector("#form_file_upload"));
     }
-
     window.onload = (evt) => {
       console.log(document.querySelector("#form01"), document.querySelector("body"))
       document.querySelector("#form01").addEventListener("submit", form_submit);
@@ -21,7 +20,6 @@
       formData.append("name", name.value);
       console.log(files.files);
       for (let i = 0; i < files.files.length; i++) {
-        
         formData.append("files", files.files[i]);
       }
       fetch("http://localhost:4000/upload_files", {

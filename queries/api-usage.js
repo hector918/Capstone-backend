@@ -22,8 +22,17 @@ const insert_to_api_usage = async (body) => {
 };
 
 const read_api_usage = async (start = 0, limit = 100) => {
+  const display_fields = [
+    'timestamp', 
+    'user_input', 
+    'caller', 
+    'url', 
+    'json', 
+    'req_usage', 
+    'ip_address'
+  ];
   try {
-    return await db.any(`SELECT * FROM api_usage ORDER BY timestamp DESC OFFSET $[start] LIMIT $[limit];`, { start, limit });
+    return await db.any(`SELECT ${display_fields.join(',')} FROM api_usage ORDER BY timestamp DESC OFFSET $[start] LIMIT $[limit];`, { start, limit });
   } catch (error) {
     console.log(error);
     return false;

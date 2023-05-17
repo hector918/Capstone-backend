@@ -4,7 +4,41 @@ const fs = require('fs');
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const path = require('path');
 
-df.get("/:fileHash", async (req, res)=>{
+///get meta data by hash
+df.get("/meta/:fileHash", async (req, res) => {
+  const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
+  const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, 'metadata.txt');
+  try {
+    if(fileHash !== false && fs.existsSync(file_path)){
+      const json = JSON.parse(fs.readFileSync(file_path));
+      const field_exchange = {
+        "originalname" : "name",
+        "mimetype" : "type",
+        "size" : "size"
+      }
+      let ret = {};
+      for(let x in field_exchange) ret[field_exchange[x]] = json[x];
+      
+      res.send(ret);
+    }else{
+      throw("file not found");
+    }
+  } catch (error) {
+    res.status(404).send("file not found");
+  }
+  /*
+    lastModified:  1680656982986
+    lastModifiedDate:  "2023-04-05T01:09:42.986Z"
+    name: "oldmansea.pdf"
+    size: 380238
+    type: "application/pdf"
+    webkitRelativePath: ""
+    {"fieldname":"files","originalname":"oldmansea.pdf","encoding":"7bit","mimetype":"application/pdf","destination":"uploads/","filename":"16329a63f133a91c3a2d28d3161bef34","path":"uploads/16329a63f133a91c3a2d28d3161bef34","size":380238}
+  */
+})
+
+//get file content by hash
+df.get("/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
   // const processed_file_path = `${__dirname}/../text-files/`;
   const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, fileHash);

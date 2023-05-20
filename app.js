@@ -20,7 +20,7 @@ app.use("/rau", require("./controllers/read-api-usage"));
 app.get("*", (req, res) => {
   // console.log(req.session,req.sessionID,"a")
   console.log(req.socket.remoteAddress);
-  res.status(404).send("<h3>page not found.</h3><p style='position: absolute;bottom: 0;right: 0;margin-right: 3%'> by Binary mind. 2023 </p>");
+  res.status(404).send("<h3>page not found.</h3><p style='position: absolute;bottom: 0;right: 0;margin-right: 3%'> by [Binary mind]. 2023 </p>");
 });
 
 ////////////////////////////////////////////////

@@ -12,7 +12,7 @@
     window.onload = (evt) => {
       read_api();
     }
-    function read_api(){
+    function read_api(start = 0, limit = 500, callback = undefined){
       const header = {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
@@ -26,7 +26,7 @@
         // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         // body: JSON.stringify(data), // body data type must match "Content-Type" header
       }
-      fetch(`./rau`, header).then(response => response.json())
+      fetch(`./rau?start=${start}&limit=${limit}`, header).then(response => response.json())
       .then(data => {
         let timeline_parent = document.querySelector("#timeline-div");
         let calendar_clicker = document.querySelector("#calendar-clicker-div");
@@ -37,6 +37,7 @@
           timeline_parent.append(add_timeline_item(date, timeline_data[date]));
           calendar_clicker.append(add_calender_item(date));
         }
+        if(callback) callback();
       })
       .catch(error => console.log(error));
       function reorganize_data(data){
@@ -47,6 +48,15 @@
         }
         return ret;
       }
+    }
+    /////////////
+    function onSearchClick(target){
+      target.disabled = true;
+      read_api(
+        document.querySelector("#search_start_input").value,
+        document.querySelector("#search_limit_input").value,
+        () => {target.disabled = false}
+      );
     }
     /////////////
     function add_calender_item(d){
@@ -80,9 +90,26 @@
           <div class='column'>${el.ip_address}</div>
           <div class='column'>${el.caller}</div>
           <div class='column'>${el.user_input}</div>
-          <div class='column col-1' style='text-align:right;'>${el.req_usage}</div>
+          <div class='column col-1 tooltip tooltip-left' style='text-align:left;' data-tooltip='${jsonToString(el.json)}'>${el.req_usage}</div>
         </div>`).join("");
       }
+      function jsonToString(json, indent = 0) {
+        let str = '';
+        for (let key in json) {
+          for (let i = 0; i < indent; i++) {
+            str += '  ';
+          }
+          str += key + ': ';
+          if (typeof json[key] === 'object' && json[key] !== null) {
+            // Recursive call for nested objects
+            str += '\n' + jsonToString(json[key], indent + 1);
+          } else {
+            str += json[key] + '\n';
+          }
+        }
+        return str;
+      }
+
     }
     function convert_time_UTC_to_local(utcTime){
       // Convert UTC time to local time
@@ -90,10 +117,25 @@
     }
   </script>
   <style>
-    body, .container, .full-height-columns{
+    body, .container{
       height: 100vh;
       padding: 0;
       margin: 0;
+    }
+    .full-height-columns{
+      height: calc(100vh - 35px);
+      padding: 0;
+      margin: 0;
+      
+    }
+    .navbar, .navbar div{
+      height: 35px;
+      padding: 0;
+      margin: 0;
+      padding-top: 1px;
+    }
+    .navbar div p {
+      margin-left: 10px;
     }
     body {
       overscroll-behavior: none;
@@ -109,6 +151,13 @@
 </head>
 <body>
   <div class="container">
+    <div class="navbar">
+      <div><p>Read record from 
+        <input id="search_start_input" type="number" value="0" style="text-align: center; border: none; width: 100px;"/>, Limit 
+        <input id="search_limit_input" type="number" value="500" style="text-align: center; border: none; width: 100px;"/> 
+        <button class="btn btn-sm" onclick="onSearchClick(this)">Search</button>
+      </p></div>
+    </div>
     <div class="columns col-gapless full-height-columns">
       <div class="column col-10 col-mx-auto full-height-column" style="padding: 50px;background-color: #ededed;">
         <div class="timeline" id="timeline-div"></div>

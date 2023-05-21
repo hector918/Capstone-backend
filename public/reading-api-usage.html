@@ -86,7 +86,7 @@
       return div;
       function create_sub_content(row){
         return row.map(el => `<div class='columns col-gapless'>
-          <div class='column'>${convert_time_UTC_to_local(el.timestamp).split(',').join("<br>")}</div>
+          <div class='column'>${convert_time_UTC_to_local(el.timestamp).split(',')[1]}</div>
           <div class='column'>${el.ip_address}</div>
           <div class='column'>${el.caller}</div>
           <div class='column'>${el.user_input}</div>

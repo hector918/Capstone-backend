@@ -39,6 +39,7 @@ rc.post("/", async (req, res)=>{
       const {id, usage, choices} = completion;
       console.log(completion);
       //respond
+      completion['level'] = level;
       res.send(JSON.stringify(completion));
       //record api usage
       insert_to_api_usage({

@@ -1,9 +1,41 @@
 const express = require("express");
 const ra = express.Router();
-const { get_an_image, explainText } = require('./wrapped-api');
+const { get_an_image, explainText, get_translation } = require('./wrapped-api');
 const {user_input_filter} = require('./str-filter');
 const {insert_to_api_usage} = require('../queries/api-usage');
 
+ra.post("/translation", async (req, res) => {
+  try {
+    let {q, language, level} = req.body;
+    //pre filter the user input
+    question = user_input_filter(q);
+    //stop when question invaild
+    if(question === false || question.length < 4 || question.length > 10000) throw "invaild question";
+    //get completion
+    const completion = await get_translation(q, language, level);
+    if(completion){
+      const {id, usage, choices} = completion;
+      console.log(completion);
+      completion['level'] = level;
+      //respond
+      res.send(JSON.stringify(completion));
+      //record api usage
+      insert_to_api_usage({
+        user_name: req.sessionID, 
+        user_input: q, 
+        caller: 'reading-assistance-translate-text', 
+        json: completion,
+        req_usage: usage.total_tokens,
+        ip_address: req.socket.remoteAddress
+      });
+    }else{
+      res.send(JSON.stringify({result:"something went wrong, contact admin"}));
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error });
+  }
+});
 
 //karyn's work
 ra.post("/image", async (req, res) => {
@@ -11,7 +43,7 @@ ra.post("/image", async (req, res) => {
     let {q} = req.body;
     //pre filter the user input
     question = user_input_filter(q);
-    if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";
+    if(question === false || question.length < 4 || question.length > 1000) throw "invaild question";
     //call open ai api
     const ret = await get_an_image(q);
     //record api usage

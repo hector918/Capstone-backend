@@ -30,7 +30,9 @@ async function list_models() {
 
 async function chatCompletion(question, context, max_token, level = undefined) {
   try {
-    ///level need to fill
+    //level context
+    const level_context = level_helper(level);
+    //get completion
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       temperature: 0,
@@ -44,7 +46,8 @@ async function chatCompletion(question, context, max_token, level = undefined) {
         },
         {
           role: "user",
-          content: `Answer the question based on the context below give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n\nContext: ${context}\n\n---\n\nQuestion: ${question}\nAnswer:`,
+          content: `Answer the question based on the context below give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n${level_context}
+          \nContext: ${context}\n\n---\n\nQuestion: ${question}\nAnswer:`,
         },
       ],
     });
@@ -58,6 +61,74 @@ async function chatCompletion(question, context, max_token, level = undefined) {
     }
     return false;
   }
+}
+
+async function get_translation(prompt, language = 'english', level = "2", max_token = 2000) {
+  try {
+    const level_context = level_helper(level);
+    // example of level context "use simplified A0-level words to answer";
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      temperature: 0,
+      max_tokens: max_token,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      messages: [
+        {
+          //
+          role: "system",
+          content: `I want you to act as an ${language} translator, spelling corrector and improver. I will speak to you in any language and you will detect the language, translate it and answer in the corrected and improved version of my text, in ${language}. I want you to ${level_context}. Keep the meaning same, but make them more literary. I want you to only reply the correction, the improvements and nothing else, do not write explanations. `,
+        },
+        {
+          role: "user",
+          content: `My first Paragraph is "${prompt}"`,
+        },
+      ],
+    });
+    return completion.data;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+  /* response example
+  {"id":"chatcmpl-7KwhVgG5uasdKy73p3qBYFRzdX6g0","object":"chat.completion","created":1685226561,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1419,"completion_tokens":807,"total_tokens":2226},"choices":[{"message":{"role":"assistant","content":"For
+  anything, people hope that those who know the truth can reveal it. Although many people have some understanding of the
+  Chinese, few can speak of the whole truth. This is because no matter how rich a person's knowledge is, it is impossible
+  to understand all aspects of the Chinese. Therefore, this book will face challenges from three different
+  perspectives.\n\nThe first perspective believes that it is a waste of effort to try to show the character of the Chinese
+  people. Mr. Cook, a journalist for the London Times, visited China in 1857-1858 and, like all writers who came to China,
+  saw Chinese people living in various environments and learned about them through knowledgeable people. Later, Mr. Cook
+  described the character of the Chinese people in the preface to his collection of letters. However, he admitted that he
+  was not satisfied with his description and felt sorry for it. \"When it comes to the character of the Chinese, there are
+  some good articles related to it, but I did not use them in my letters, which is really careless. This topic is not only
+  very attractive, but also has a lot of room for expansion, which can allow people to make clever associations and
+  profound generalizations, and then make correct judgments. But I was not inspired by it at all. If those picky people
+  knew about this, they would definitely blame me. In fact, I originally wrote several good qualities of the Chinese
+  people, but when I wrote these letters, all I saw were the rough words and deeds of the Chinese people. In order to
+  ensure authenticity, I burned several of the good letters. However, there is one thing I have to say. I know several
+  sinologists who are not only excellent in their profession, but also frank in their character. When I talked to them
+  about this, they agreed with my view that the character of the Chinese people cannot be summarized in one word. Of
+  course, only sinologists who truly understand the Chinese people will encounter such difficult problems. As for those
+  \"smart\" writers, they can completely bypass the topic and write some unrealistic arguments with flashy words. To be
+  honest, the Chinese people do have contradictions in their character. However, now I am asked to make a comprehensive
+  and accurate analysis and evaluation of them, but I feel that I am not capable enough. At present, all I can do is to
+  describe the Chinese people with this constant factor of character and avoid giving them a precise definition. If I can
+  do this, I am already satisfied.\"\n\nIn the past thirty years, the position of the Chinese people in international
+  affairs has become increasingly important. They are not afraid of any pressure, which is really incomprehensible.
+  Indeed, foreigners can only truly understand the Chinese people in China. Foreigners generally admit that they cannot
+  figure out the Chinese people. However, no matter what, we have been dealing with the Chinese people for hundreds of
+  years, so we have reason to believe that studying the Chinese people is the same as exploring other complex
+  situations.\n\nThe second perspective believes that the author of this book is not qualified to write such a book at
+  all. This opposition is very strong. Yes, I have only lived in China for 22 years, so I am indeed lacking in the ability
+  to successfully write about the character of the Chinese people. My situation is like that of a miner who only knows how
+  to work hard. Although this miner has been working hard in a silver mine for 22 years, he may not have the ability to
+  write a paper on metallurgy or the gold-silver standard. China is so big, and I have only lived in two provinces, and
+  have not visited less than half of the provinces, so of course I am not qualified to comment on it. These letters were
+  originally only for readers of the Shanghai Zilin Xibao, but later, some topics aroused the interest of people in the
+  United Kingdom, the United States, Canada, and other countries, so I complied with their strong request to collect these
+  letters and publish them."},"finish_reason":"stop","index":0}]}
+  
+  */
 }
 
 //kayrn's work
@@ -151,7 +222,43 @@ function cosineDistance(u, v, w = null) {
   // Compute the cosine distance
   return dotProduct / (Math.sqrt(magnitudeU) * Math.sqrt(magnitudeV));
 }
+function level_helper(level){
+  switch(level){
+    case "1":
+      return "use simplified Elementary level of words to answer";
+    case "3":
+      return "use Advanced and Unabridged words to answer";
+    default:
+      return ""
+  }
+  /* a0
+    {"id":"chatcmpl-7KsUPOXUIRzGWS5xopze4GuTc2oIi","object":"chat.completion","created":1685210373,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1993,"completion_tokens":99,"total_tokens":2092},"choices":[{"message":{"role":"assistant","content":"The
+    book \"The Old Man and the Sea\" features various types of fish, including tuna, dolphin, flying fish, and squid. The
+    old man in the story is trying to catch a giant marlin, which he describes as having a huge eye and purple stripes. The
+    marlin is also accompanied by two gray sucking fish that swim around him. The old man also encounters porpoises and
+    observes their behavior. Overall, the book portrays the ocean and its inhabitants as both beautiful and
+    cruel."},"finish_reason":"stop","index":0}],"level":"1"}
 
+    level default
+    {"id":"chatcmpl-7KsWI9rAaQkRXb9Zyyy0EGWKEEukX","object":"chat.completion","created":1685210490,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1984,"completion_tokens":129,"total_tokens":2113},"choices":[{"message":{"role":"assistant","content":"The
+    book \"The Old Man and the Sea\" by Ernest Hemingway features various types of fish, including a giant marlin, tuna,
+    dolphin fish, flying fish, porpoises, and schools of squid. The old man in the story is primarily focused on catching
+    the giant marlin, which he struggles with for days. The book also mentions the gray sucking fish that swim around the
+    marlin and attach themselves to it at times. The old man also reflects on the delicate and fine sea swallows and the
+    cruelty of the ocean towards them. Overall, the book portrays a vivid and detailed picture of the marine life in the
+    ocean."},"finish_reason":"stop","index":0}],"level":"2"}
+
+    C3
+    {"id":"chatcmpl-7KwZx6dUQx0tRhGZZ3pXXMBG34P3G","object":"chat.completion","created":1685226093,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1990,"completion_tokens":150,"total_tokens":2140},"choices":[{"message":{"role":"assistant","content":"In
+    the book \"The Old Man and the Sea\" by Ernest Hemingway, there are several types of fish mentioned. The main fish that
+    the old man is trying to catch is a giant marlin, which is described as having a huge bulk, purple stripes, a dorsal
+    fin, and large pectoral fins. The old man also mentions catching tuna, which are referred to as all fish of that species
+    and distinguished by their proper names when sold or traded for bait. Additionally, there are schools of squid in the
+    deepest holes, and flying fish are mentioned as the old man's principal friends on the ocean. The old man also sees two
+    gray sucking fish that swim around the marlin, and two porpoises come around his
+    boat."},"finish_reason":"stop","index":0}],"level":"3"}
+  */
+}
 module.exports = {
   get_embedding,
   cosineDistance,
@@ -159,7 +266,8 @@ module.exports = {
   list_models,
   chatCompletion,
   get_an_image,
-  explainText
+  explainText,
+  get_translation
 };
 
 /* //list model result example

@@ -11,6 +11,7 @@ rc.post("/", async (req, res)=>{
   
   //reading body
   let {q, fileHash, level} = req.body;
+  console.log(req.body)
   //check user input
   q = user_input_filter(q);
   //error handling

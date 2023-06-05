@@ -139,7 +139,7 @@ async function get_an_image(prompt) {
       n: 1,
       size: "512x512",
     });
-    return response.data;
+    return save_image_to_local(prompt, response.data);
   } catch (error) {
     console.log(error.response?.data?.error);
     return false;
@@ -185,6 +185,72 @@ async function explainText(words, max_token = 2000) {
 }
 
 //helper below////////////////////////////////////////////
+function save_image_to_local(prompt, openai_dalle_response){
+  /**
+   * success response
+   *  {
+    created: 1685991077,
+    data: [
+      {
+        url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-W3qTiYheuLe3KAAPdSI9HPnU/user-3AejdC7ysjGYoB9y8AWhpnCD/img-nsjqggdzIk7aIWWzxkjm7MvC.png?st=2023-06-05T17%3A51%3A17Z&se=2023-06-05T19%3A51%3A17Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-06-05T16%3A36%3A02Z&ske=2023-06-06T16%3A36%3A02Z&sks=b&skv=2021-08-06&sig=jArkLtedIYRebLQkfjhOs5oofdHXyQlZqXJlbbe7IZU%3D'
+      }
+    ]
+  }
+
+  /// error response
+  {
+    code: null,
+    message: 'Your request was rejected as a result of our safety system. Your prompt may contain text that is not allowed by our safety system.',
+    param: null,
+    type: 'invalid_request_error'
+  }
+  */
+  //
+  if(openai_dalle_response.created){
+    //success
+
+    const alt_img_hash = createSHA256Hash(prompt + openai_dalle_response['data'][0]['url']);
+    
+    const metaData = {...openai_dalle_response, prompt, timestamp: Date()};
+
+    save_img_to_file(openai_dalle_response['data'][0]['url'], alt_img_hash, metaData);
+
+    openai_dalle_response.data.push({url: alt_img_hash});
+  }else{
+    //failed
+    openai_dalle_response['error'] = "true";
+  }
+  console.log(openai_dalle_response);
+  return openai_dalle_response;
+  ////////////////////////////////////////
+  function save_img_to_file(url, fileHash, metaData){
+
+    const http = require('https');
+    const fs = require('fs');
+    const path_prefix = `${__dirname}/../img-files/`;
+    const destinationPath = path_prefix + fileHash;
+    const file = fs.createWriteStream(destinationPath);
+    http.get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        file.close(function() {
+          fs.writeFile(destinationPath + ".metadata", JSON.stringify(metaData), ()=>{});
+        });
+      });
+    }).on('error', function(err) {
+      fs.unlink(destinationPath, function() {
+        console.error('Error while downloading the file:', err.message);
+      });
+    });
+  }
+  function createSHA256Hash(data) {
+    const crypto = require('crypto');
+    const hash = crypto.createHash('sha256');
+    hash.update(data);
+    return hash.digest('hex');
+  }
+}
+
 function embedding_result_templete(text, raw_res) {
   return {
     text: text,

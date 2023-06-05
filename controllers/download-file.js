@@ -4,7 +4,7 @@ const fs = require('fs');
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const path = require('path');
 
-///get meta data by hash
+///get pdf file meta data by hash
 df.get("/meta/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
   const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, 'metadata.txt');
@@ -37,7 +37,18 @@ df.get("/meta/:fileHash", async (req, res) => {
   */
 })
 
-//get file content by hash
+//get alt img file by hash
+df.get("/image/:fileHash", async (req, res) => {
+  const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
+  const file_path = path.join(__dirname, `/../img-files/${fileHash}/`, 'metadata.txt');
+  if(fileHash !== false && fs.existsSync(file_path)){
+    res.sendFile(file_path);
+  }else{
+    res.status(404).send("file not found");
+  }
+})
+
+//get pdf file content by hash
 df.get("/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
   // const processed_file_path = `${__dirname}/../text-files/`;
@@ -48,5 +59,7 @@ df.get("/:fileHash", async (req, res) => {
     res.status(404).send("file not found");
   }
 });
+
+
 
 module.exports = df;

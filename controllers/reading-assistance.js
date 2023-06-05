@@ -51,11 +51,13 @@ ra.post("/image", async (req, res) => {
       user_name: req.sessionID, 
       user_input: q, 
       caller: 'reading-assistance-text-to-image', 
-      json: ret,
+      json: ret || {},
       ip_address: req.socket.remoteAddress
     });
     //respond
-    res.json({result: "success", image_url: ret.data[0].url});
+    console.log("in ra", ret);
+    if(ret.error) throw new Error(ret.message);
+    res.json({result: "success", image_url: ret.data[0].url, alt_image_url: ret.data[1].url});
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });

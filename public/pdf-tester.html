@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module" defer>
+    ////hector build jun/07/2023 //////////////////////////
+
+    import {extractTextAndImageFromPDF} from './pdf-wrapper.js';
+    
+    window.onload = (evt) =>{
+      let url = 'http://127.0.0.1:4000/download_file/0ad1d820761a5aca9df52c22ea1cfc4ca5dad64923f51270dbe8f106f3817eef';
+      extractTextAndImageFromPDF(url).then(data => {
+        console.log(data);
+        document.querySelector("#div").append(...fillup_div(data));
+      });
+
+    }
+    ///create html element for text and image/////////
+    function fillup_div(pages){
+      const ret = [];
+      for(let page of pages){
+        page['imgs'].forEach(el => ret.push(create_image_el(el)));
+        page['text']['items'].forEach(el => ret.push(create_text_el(el)))
+      }
+      return ret;
+      ///////////////////////////////
+      function create_text_el(data){
+        const p = document.createElement("p");
+        p.innerHTML = data.str;
+        return p;
+      }
+      function create_image_el(data){
+        const p = document.createElement("p");
+        const img = document.createElement("img");
+        p.append(img);
+
+        loadImageBitmapAsImgSrc(data.bitmap).then(dataUrl => img.src = dataUrl);
+        return p;
+        /////example of display bitmap in img element//////
+        function loadImageBitmapAsImgSrc(imageBitmap) {
+          return new Promise((resolve, reject) => {
+            createImageBitmap(imageBitmap).then(img => {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              canvas.getContext('2d').drawImage(img, 0, 0);
+              resolve(canvas.toDataURL());
+            })
+            .catch(error => {
+              reject(error);
+            });
+          });
+        }
+      }
+      ///////////////////////////////
+      
+    }
+  </script>
+</head>
+<body>
+  <h1>PDF.js 'Hello, world!' example</h1>
+  <div id="div"></div>
+  <canvas id="the-canvas"></canvas>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f28296c5.css",
+    "main.js": "/static/js/main.4ae03f69.js",
+    "static/js/787.e526616b.chunk.js": "/static/js/787.e526616b.chunk.js",
+    "static/media/sixteen-miles-out-ScvYtpYzgFI-unsplash.jpg": "/static/media/sixteen-miles-out-ScvYtpYzgFI-unsplash.314315d06d2df0a808e6.jpg",
+    "static/media/nightmode.jpeg": "/static/media/nightmode.13dbdbe4fe93ce4e7e6a.jpeg",
+    "static/media/imgres.jpeg": "/static/media/imgres.da7a27b41726f01d2e3c.jpeg",
+    "static/media/yellowsun.png": "/static/media/yellowsun.cf94206de442bde8f79f.png",
+    "static/media/readas.jpeg": "/static/media/readas.0296354a0ca7e65e3a5f.jpeg",
+    "static/media/popupbar.jpeg": "/static/media/popupbar.e1db33453772c11e2323.jpeg",
+    "static/media/highlightword.jpeg": "/static/media/highlightword.4c0771e09b0357c4d806.jpeg",
+    "static/media/explain.jpeg": "/static/media/explain.12fd390f4cc18b0516c5.jpeg",
+    "static/media/recents.jpeg": "/static/media/recents.a1295afd61d34f72b1fe.jpeg",
+    "static/media/Caplogo2.png": "/static/media/Caplogo2.e5c6e2cb7b66747b523e.png",
+    "static/media/confucius.jpeg": "/static/media/confucius.be0439f5319f41f72ebb.jpeg",
+    "static/media/readcomp.jpeg": "/static/media/readcomp.ffb94c480a772f8242b8.jpeg",
+    "static/media/textplanation.png": "/static/media/textplanation.a2beffca67dc18162930.png",
+    "static/media/image.png": "/static/media/image.29b25e50d209b439579e.png",
+    "static/media/binarylogo.jpeg": "/static/media/binarylogo.07528eb5f037ddeb9946.jpeg",
+    "index.html": "/index.html",
+    "main.f28296c5.css.map": "/static/css/main.f28296c5.css.map",
+    "main.4ae03f69.js.map": "/static/js/main.4ae03f69.js.map",
+    "787.e526616b.chunk.js.map": "/static/js/787.e526616b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f28296c5.css",
+    "static/js/main.4ae03f69.js"
+  ]
+}

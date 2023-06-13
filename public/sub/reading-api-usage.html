@@ -26,7 +26,7 @@
         // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         // body: JSON.stringify(data), // body data type must match "Content-Type" header
       }
-      fetch(`./rau?start=${start}&limit=${limit}`, header).then(response => response.json())
+      fetch(`/rau?start=${start}&limit=${limit}`, header).then(response => response.json())
       .then(data => {
         let timeline_parent = document.querySelector("#timeline-div");
         let calendar_clicker = document.querySelector("#calendar-clicker-div");

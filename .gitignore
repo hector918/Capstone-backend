@@ -1,6 +1,5 @@
 /node_modules
 /uploads
 /text-files
-/img-files
 .env
 token.js

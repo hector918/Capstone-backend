@@ -4,7 +4,7 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const crypto = require('crypto');
 const fs = require('fs');
-
+const pdf_pages_limit = 250;
 //express operation enterance////////////////////////////////////////////////////
 uf.post("/", upload.array("files"), async (req, res)=>{
   if(req.files?.length > 0){
@@ -36,14 +36,14 @@ async function process_file(filepath, meta_data){
   //create file hash
   const fileHash = crypto.createHash('sha256').update(filecontent).digest('hex');
 
-  if(fs.existsSync(`${processed_file_path}${fileHash}`)){
+  if(fs.existsSync(`${processed_file_path}${fileHash}/${fileHash}`)){
     //if exists
     fs.unlinkSync(filepath);
     return {result:"success", fileHash};
   }else{
     //if not exists
     //making folder
-    fs.mkdirSync(`${processed_file_path}${fileHash}`);
+    if(!fs.existsSync(`${processed_file_path}${fileHash}`)) fs.mkdirSync(`${processed_file_path}${fileHash}`);
     //move the file from upload to the folder named by filehash
     fs.renameSync(filepath, `${processed_file_path}${fileHash}/${fileHash}`);
     //save the metadata 
@@ -57,15 +57,27 @@ async function process_file(filepath, meta_data){
       default: // treat as text file
         text = fs.readFileSync(`${processed_file_path}${fileHash}/${fileHash}`, 'utf8')
     }
+    if(text === false) {
+      //text are false
+      fs.unlinkSync(`${processed_file_path}${fileHash}/metadata.txt`);
+      fs.unlinkSync(`${processed_file_path}${fileHash}/${fileHash}`);
+      return {};
+    }
     //next split text
     const text_arr = text_splitter(text, 700, 100, str => str.replace(/[\n\s]+/g, " "));
     //embedding
     const {get_embedding, embedding_result_templete} = require('./wrapped-api');
     let total_usage = 0;
     const embedding = await Promise.all(text_arr.map(async el => {
-      let data = await get_embedding(el);
-      total_usage += data.usage.total_tokens;
-      return embedding_result_templete(el, data);
+      try {
+        let data = await get_embedding(el);
+        total_usage += data.usage.total_tokens;
+        return embedding_result_templete(el, data);
+      } catch (error) {
+        console.log(error);
+        return {}
+      }
+      
     }));
     //to file
     //save usage to folder
@@ -81,6 +93,8 @@ async function pdf2text(filepath){
   const content = fs.readFileSync(filepath);
   //parse the pdf to text
   let ret = await require('pdf-parse')( content );
+  if(ret.numpages > pdf_pages_limit) return false;
+  
   //return the text
   return ret.text || false;
 }

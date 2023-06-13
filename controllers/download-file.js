@@ -4,6 +4,15 @@ const fs = require('fs');
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const path = require('path');
 
+df.get("/download_localstorage_init", async (req, res) => {
+  const file_path = `./client_localstorage_init.txt`;
+  if(fs.existsSync(file_path)){
+    res.send(fs.readFileSync(file_path));
+  }else{
+    res.send("{}")
+  }
+});
+
 ///get pdf file meta data by hash
 df.get("/meta/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
@@ -40,7 +49,7 @@ df.get("/meta/:fileHash", async (req, res) => {
 //get alt img file by hash
 df.get("/image/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
-  const file_path = path.join(__dirname, `/../img-files/${fileHash}/`, 'metadata.txt');
+  const file_path = path.join(__dirname, `/../img-files/${fileHash}`);
   if(fileHash !== false && fs.existsSync(file_path)){
     res.sendFile(file_path);
   }else{

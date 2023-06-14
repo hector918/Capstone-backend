@@ -11,7 +11,11 @@ uf.post("/", upload.array("files"), async (req, res)=>{
     //only process first file from req 
     let ret = await process_file(req.files[0].path, req.files[0]);
     //respond
-    res.json({...ret, message: "Successfully uploaded"});
+    if(!ret.error){
+      res.json({...ret, message: "Successfully uploaded"});
+    }else{
+      res.json({...ret});
+    }
 
     if(ret["usage"]){//if file is new uploaded
       //record api usage to db
@@ -61,7 +65,7 @@ async function process_file(filepath, meta_data){
       //text are false
       fs.unlinkSync(`${processed_file_path}${fileHash}/metadata.txt`);
       fs.unlinkSync(`${processed_file_path}${fileHash}/${fileHash}`);
-      return {};
+      return {error: "make sure it's a text pdf and less than 250 pages"};
     }
     //next split text
     const text_arr = text_splitter(text, 700, 100, str => str.replace(/[\n\s]+/g, " "));

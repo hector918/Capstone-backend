@@ -11,10 +11,10 @@ rc.post("/", async (req, res)=>{
   
   //reading body
   let {q, fileHash, level} = req.body;
-  console.log(req.body)
   //check user input
   q = user_input_filter(q);
   //error handling
+  
   try {
     if(q === false || q.length < 4 || q.length > 512) throw "question invaild";
     //getting embedding of question
@@ -30,15 +30,16 @@ rc.post("/", async (req, res)=>{
     });
     //reading related embedding file base on hash,
     const embeddings = process_addressing_file(fileHash);
-    if(embeddings === false) throw "file not found";
+    if(embeddings === false) throw "embeddings file not found";
     //getting the similarity and repack the asnwer related text to context
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
     //sending out the completion request to openai
     const completion = await chatCompletion(q, context, max_token_for_completion, level);
     //if result is Legit
+    
     if(completion) {
       const {id, usage, choices} = completion;
-      console.log(completion);
+      console.log("in reading comprehension", completion);
       //respond
       completion['level'] = level;
       res.send(JSON.stringify(completion));
@@ -53,11 +54,11 @@ rc.post("/", async (req, res)=>{
       });
     }
     else{
-      res.send(JSON.stringify({result:"something went wrong, contact admin"}));
+      throw new Error("completion = false");
     }
   } catch (error) {
     console.log(error);
-    res.send(JSON.stringify({result:"failed", error}));
+    res.status(400).send(JSON.stringify({result:"failed", error}));
   }
 })
 ///helper section///////////////////////////////////////////////////
@@ -67,7 +68,6 @@ function process_addressing_file(filehash){
   const folder_path = `${__dirname}/../text-files/${filehash}`;
   const embedding_filename = `${folder_path}/embedding-${filehash}.json`;
   //check file exists
-  console.log(folder_path, fs.existsSync(folder_path), embedding_filename, fs.existsSync(embedding_filename));
   if(!fs.existsSync(folder_path) || !fs.existsSync(embedding_filename)) return false;
   try {
     return JSON.parse(fs.readFileSync(embedding_filename));

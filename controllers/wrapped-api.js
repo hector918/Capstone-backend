@@ -32,9 +32,12 @@ async function chatCompletion(question, context, max_token, level = undefined) {
   try {
     //level context
     const level_context = level_helper(level);
+    console.log(level_context);
     //get completion
     const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      // model: "gpt-3.5-turbo",
+      // model: "gpt-3.5-turbo-16k",
+      model: "gpt-3.5-turbo-16k-0613",
       temperature: 0,
       max_tokens: max_token,
       frequency_penalty: 0,

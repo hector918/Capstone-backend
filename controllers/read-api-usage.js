@@ -1,4 +1,5 @@
 const express = require("express");
+const {list_models} = require('./wrapped-api');
 const rau = express.Router();
 
 rau.get('/',async (req, res) => {
@@ -9,6 +10,11 @@ rau.get('/',async (req, res) => {
   
   const ret = await read_api_usage(start, limit);
   res.send(JSON.stringify(ret));
+})
+
+rau.get("/list_model", async (req, res) => {
+  console.log("asking list model")
+  res.send(JSON.stringify(await list_models()));
 })
 
 module.exports = rau;

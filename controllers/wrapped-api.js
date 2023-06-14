@@ -296,36 +296,18 @@ function level_helper(level){
     case "1":
       return "use simplified Elementary level of words to answer";
     case "3":
-      return "use Advanced and Unabridged words to answer";
+      return "use professional terms to answer";
     default:
       return ""
   }
-  /* a0
-    {"id":"chatcmpl-7KsUPOXUIRzGWS5xopze4GuTc2oIi","object":"chat.completion","created":1685210373,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1993,"completion_tokens":99,"total_tokens":2092},"choices":[{"message":{"role":"assistant","content":"The
-    book \"The Old Man and the Sea\" features various types of fish, including tuna, dolphin, flying fish, and squid. The
-    old man in the story is trying to catch a giant marlin, which he describes as having a huge eye and purple stripes. The
-    marlin is also accompanied by two gray sucking fish that swim around him. The old man also encounters porpoises and
-    observes their behavior. Overall, the book portrays the ocean and its inhabitants as both beautiful and
-    cruel."},"finish_reason":"stop","index":0}],"level":"1"}
-
-    level default
-    {"id":"chatcmpl-7KsWI9rAaQkRXb9Zyyy0EGWKEEukX","object":"chat.completion","created":1685210490,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1984,"completion_tokens":129,"total_tokens":2113},"choices":[{"message":{"role":"assistant","content":"The
-    book \"The Old Man and the Sea\" by Ernest Hemingway features various types of fish, including a giant marlin, tuna,
-    dolphin fish, flying fish, porpoises, and schools of squid. The old man in the story is primarily focused on catching
-    the giant marlin, which he struggles with for days. The book also mentions the gray sucking fish that swim around the
-    marlin and attach themselves to it at times. The old man also reflects on the delicate and fine sea swallows and the
-    cruelty of the ocean towards them. Overall, the book portrays a vivid and detailed picture of the marine life in the
-    ocean."},"finish_reason":"stop","index":0}],"level":"2"}
-
-    C3
-    {"id":"chatcmpl-7KwZx6dUQx0tRhGZZ3pXXMBG34P3G","object":"chat.completion","created":1685226093,"model":"gpt-3.5-turbo-0301","usage":{"prompt_tokens":1990,"completion_tokens":150,"total_tokens":2140},"choices":[{"message":{"role":"assistant","content":"In
-    the book \"The Old Man and the Sea\" by Ernest Hemingway, there are several types of fish mentioned. The main fish that
-    the old man is trying to catch is a giant marlin, which is described as having a huge bulk, purple stripes, a dorsal
-    fin, and large pectoral fins. The old man also mentions catching tuna, which are referred to as all fish of that species
-    and distinguished by their proper names when sold or traded for bait. Additionally, there are schools of squid in the
-    deepest holes, and flying fish are mentioned as the old man's principal friends on the ocean. The old man also sees two
-    gray sucking fish that swim around the marlin, and two porpoises come around his
-    boat."},"finish_reason":"stop","index":0}],"level":"3"}
+  /* 
+  a3:
+  Bitemporal
+hemianopsia, which is the loss of vision in the outer half of the visual field in both eyes, is typically caused by a
+lesion at the optic chiasm. The optic chiasm is the point where the optic nerves from each eye cross over. Lesions at
+the optic chiasm can be caused by various conditions such as tumors, aneurysms, or inflammation. These lesions can
+disrupt the normal transmission of visual information from the eyes to the brain, resulting in bitemporal
+hemianopsia.
   */
 }
 module.exports = {

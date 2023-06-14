@@ -2,7 +2,7 @@ const express = require("express");
 const rc = express.Router();
 const {get_embedding, cosineDistance, embedding_result_templete, chatCompletion} = require('./wrapped-api');
 const {user_input_filter} = require('./str-filter');
-const [ max_token_for_embedding, max_token_for_completion ] = [2000, 2000];
+const [ max_token_for_embedding, max_token_for_completion ] = [5000, 2000];
 //web api Entrance////////////////////////////////////////////////////
 
 rc.post("/", async (req, res)=>{

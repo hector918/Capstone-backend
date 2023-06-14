@@ -302,12 +302,20 @@ function level_helper(level){
   }
   /* 
   a3:
-  Bitemporal
-hemianopsia, which is the loss of vision in the outer half of the visual field in both eyes, is typically caused by a
-lesion at the optic chiasm. The optic chiasm is the point where the optic nerves from each eye cross over. Lesions at
-the optic chiasm can be caused by various conditions such as tumors, aneurysms, or inflammation. These lesions can
-disrupt the normal transmission of visual information from the eyes to the brain, resulting in bitemporal
-hemianopsia.
+
+Bitemporal
+hemianopsia is a visual field defect that occurs due to a lesion at the optic chiasm. The optic chiasm is the point
+where the optic nerves from each eye cross over. Lesions at the optic chiasm can be caused by various conditions such as
+tumors, aneurysms, or inflammation. These lesions can compress or damage the optic nerves, leading to the loss of
+peripheral vision on both sides (temporal fields) while preserving central vision. Bitemporal hemianopsia can be
+diagnosed through visual field examination using the confrontation method or through imaging techniques such as CT
+angiography.
+Bitemporal
+hemianopsia is a condition where there is loss of vision in the outer half of the visual field in both eyes. It is
+typically caused by a lesion at the optic chiasm, which is the point where the optic nerves from each eye cross over.
+This can occur due to various reasons such as tumors, pituitary gland disorders, or other conditions that affect the
+optic
+chiasm."
   */
 }
 module.exports = {

@@ -20,7 +20,7 @@ app.use("/rau", require("./controllers/read-api-usage"));
 /////////////////////////////////////////////
 app.get("*", (req, res) => {
   // console.log(req.session,req.sessionID,"a")
-  console.log(req.socket.remoteAddress);
+  // console.log(req.socket.remoteAddress);
   const file_path = `${__dirname}/public/index.html`;
   if(fs.existsSync(file_path)){
     res.sendFile(file_path);

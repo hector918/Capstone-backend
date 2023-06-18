@@ -3,3 +3,4 @@
 /text-files
 .env
 token.js
+.DS_Store

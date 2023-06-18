@@ -13,6 +13,19 @@ df.get("/download_localstorage_init", async (req, res) => {
   }
 });
 
+//download pdf thumbnail
+df.get("/pdf_thumbnail/:fileHash", async (req, res) => {
+  const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
+  const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, 'cover.1.png');
+  try {
+    if(fileHash !== false && fs.existsSync(file_path)){
+      res.sendFile(file_path);
+    }else throw("file not found");
+  } catch (error) {
+    res.status(404).send("file not found");
+  }
+})
+
 ///get pdf file meta data by hash
 df.get("/meta/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);

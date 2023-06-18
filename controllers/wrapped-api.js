@@ -138,7 +138,7 @@ async function get_translation(prompt, language = 'english', level = "2", max_to
 async function get_an_image(prompt) {
   try {
     const response = await openai.createImage({
-      prompt: prompt,
+      prompt: prompt_helper(prompt),
       n: 1,
       size: "512x512",
     });
@@ -146,6 +146,9 @@ async function get_an_image(prompt) {
   } catch (error) {
     console.log(error.response?.data?.error);
     return false;
+  }
+  function prompt_helper(input){
+    return `${input}, in the real world`
   }
 }
 

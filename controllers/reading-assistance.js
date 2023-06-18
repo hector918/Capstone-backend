@@ -55,7 +55,7 @@ ra.post("/image", async (req, res) => {
       ip_address: req.socket.remoteAddress
     });
     //respond
-    console.log("in ra", ret);
+    console.log(ret);
     if(ret.error) throw new Error(ret.message);
     res.json({result: "success", image_url: ret.data[0].url, alt_image_url: ret.data[1].url});
   } catch (error) {
@@ -68,7 +68,6 @@ ra.post("/image", async (req, res) => {
 ra.post("/text", async (req, res) => {
   try {
     let {q} = req.body;
-    console.log(req.body)
 
     //pre filter the user input
     question = user_input_filter(q);
@@ -76,7 +75,6 @@ ra.post("/text", async (req, res) => {
     //call open ai api
     const ret = await explainText(q);
     
-    console.log(ret);
     //record api usage
     insert_to_api_usage({
       user_name: req.sessionID, 
@@ -86,6 +84,7 @@ ra.post("/text", async (req, res) => {
       req_usage: ret.usage.total_tokens,
       ip_address: req.socket.remoteAddress
     });
+    console.log(ret);
     const answer = ret?.choices?.[0]?.message?.content;
     res.json({result: "success", data: answer});
   } catch (error) {

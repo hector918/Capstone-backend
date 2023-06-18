@@ -54,12 +54,13 @@ async function process_file(filepath, meta_data){
     fs.writeFileSync(`${processed_file_path}${fileHash}/metadata.txt`, JSON.stringify(meta_data));
     let text;
     //checking file type
+    const pdf_file_path = `${processed_file_path}${fileHash}/${fileHash}`;
     switch(meta_data.mimetype){
       case 'application/pdf':
-        text = await pdf2text(`${processed_file_path}${fileHash}/${fileHash}`);
+        text = await pdf2text(pdf_file_path);
       break;
       default: // treat as text file
-        text = fs.readFileSync(`${processed_file_path}${fileHash}/${fileHash}`, 'utf8')
+        text = fs.readFileSync(pdf_file_path, 'utf8')
     }
     if(text === false) {
       //text are false
@@ -67,6 +68,7 @@ async function process_file(filepath, meta_data){
       fs.unlinkSync(`${processed_file_path}${fileHash}/${fileHash}`);
       return {error: "make sure it's a text pdf and less than 250 pages"};
     }
+    save_pdf_to_pic(pdf_file_path);
     //next split text
     const text_arr = text_splitter(text, 700, 100, str => str.replace(/[\n\s]+/g, " "));
     //embedding
@@ -91,6 +93,23 @@ async function process_file(filepath, meta_data){
     return {result: "success", usage: total_usage, fileHash};
   }
 }
+async function save_pdf_to_pic(file_path){
+  const { fromPath } = require('pdf2pic');
+  const path = require('path');
+  file_path = path.resolve(file_path);
+  const options = {
+    density: 100,
+    saveFilename: `cover`,
+    savePath: path.dirname(file_path),
+    format: "png",
+    width: 840,
+    height: 1188
+  };
+  const storeAsImage = fromPath(file_path, options);
+  const pageToConvertAsImage = 1;
+  const ret = await storeAsImage(pageToConvertAsImage);
+  console.log(ret);
+}
 
 async function pdf2text(filepath){
   //read file into memory
@@ -98,9 +117,9 @@ async function pdf2text(filepath){
   //parse the pdf to text
   let ret = await require('pdf-parse')( content );
   if(ret.numpages > pdf_pages_limit) return false;
-  
   //return the text
   return ret.text || false;
+
 }
 
 function text_splitter(target_content, chunk_size = 1000, chunk_over_lap = 100, filter_function){

@@ -29,7 +29,12 @@ async function extractTextAndImageFromPDF(url){
     const {fnArray, argsArray} = await page.getOperatorList();
     argsArray.forEach(async (arg, i) => {
       if(fnArray[i] === PDFJS.OPS.paintImageXObject) {
-        imgs.push(await page.objs.get(arg[0]));
+        try {
+          let img = await page.objs.get(arg[0]);
+          imgs.push(img);
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
     const text = await page.getTextContent();

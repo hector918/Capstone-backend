@@ -55,20 +55,25 @@ async function process_file(filepath, meta_data){
     let text;
     //checking file type
     const pdf_file_path = `${processed_file_path}${fileHash}/${fileHash}`;
-    switch(meta_data.mimetype){
-      case 'application/pdf':
-        text = await pdf2text(pdf_file_path);
-      break;
-      default: // treat as text file
-        text = fs.readFileSync(pdf_file_path, 'utf8')
-    }
-    if(text === false) {
+    
+    try {
+      switch(meta_data.mimetype){
+        case 'application/pdf':
+          text = await pdf2text(pdf_file_path);
+        break;
+        default: // treat as text file
+          text = fs.readFileSync(pdf_file_path, 'utf8')
+      }
+      if(text === false) throw new Error("read text from file failed");
+      save_pdf_to_pic(pdf_file_path);
+    } catch (error) {
+      console.log(error);
       //text are false
       fs.unlinkSync(`${processed_file_path}${fileHash}/metadata.txt`);
       fs.unlinkSync(`${processed_file_path}${fileHash}/${fileHash}`);
       return {error: "make sure it's a text pdf and less than 250 pages"};
     }
-    save_pdf_to_pic(pdf_file_path);
+    
     //next split text
     const text_arr = text_splitter(text, 700, 100, str => str.replace(/[\n\s]+/g, " "));
     //embedding
@@ -93,6 +98,7 @@ async function process_file(filepath, meta_data){
     return {result: "success", usage: total_usage, fileHash};
   }
 }
+
 async function save_pdf_to_pic(file_path){
   const { fromPath } = require('pdf2pic');
   const path = require('path');

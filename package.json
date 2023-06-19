@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "server": "npx nodemon --watch .js server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -4,7 +4,7 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const crypto = require('crypto');
 const fs = require('fs');
-const pdf_pages_limit = 250;
+const pdf_pages_limit = 1000;
 //express operation enterance//////////////////////////////
 uf.post("/", upload.array("files"), async (req, res)=>{
   try {
@@ -69,6 +69,7 @@ uf.post("/", upload.array("files"), async (req, res)=>{
           default: // treat as text file
             text = fs.readFileSync(pdf_file_path, 'utf8')
         }
+        
         if(text === false) throw new Error("read text from file failed");
         save_pdf_to_pic(pdf_file_path);
       } catch (error) {
@@ -87,6 +88,7 @@ uf.post("/", upload.array("files"), async (req, res)=>{
       const embedding = await Promise.all(text_arr.map(async el => {
         try {
           let data = await get_embedding(el);
+          console.log(data);
           total_usage += data.usage.total_tokens;
           return embedding_result_templete(el, data);
         } catch (error) {
@@ -127,7 +129,10 @@ uf.post("/", upload.array("files"), async (req, res)=>{
     const content = fs.readFileSync(filepath);
     //parse the pdf to text
     let ret = await require('pdf-parse')( content );
-    if(ret.numpages > pdf_pages_limit) return false;
+    if(ret.numpages > pdf_pages_limit){
+      console.log(`this pdf have ${ret.numpages} pages`);
+      return false;
+    } 
     //return the text
     return ret.text || false;
   }

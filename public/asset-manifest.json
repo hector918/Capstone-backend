@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.05afc48f.css",
-    "main.js": "/static/js/main.6f610026.js",
+    "main.css": "/static/css/main.28761ad7.css",
+    "main.js": "/static/js/main.e31d3544.js",
     "static/js/787.e526616b.chunk.js": "/static/js/787.e526616b.chunk.js",
     "static/media/sixteen-miles-out-ScvYtpYzgFI-unsplash.jpg": "/static/media/sixteen-miles-out-ScvYtpYzgFI-unsplash.314315d06d2df0a808e6.jpg",
     "static/media/nightmode.jpeg": "/static/media/nightmode.13dbdbe4fe93ce4e7e6a.jpeg",
@@ -19,12 +19,12 @@
     "static/media/image.png": "/static/media/image.29b25e50d209b439579e.png",
     "static/media/binarylogo.jpeg": "/static/media/binarylogo.07528eb5f037ddeb9946.jpeg",
     "index.html": "/index.html",
-    "main.05afc48f.css.map": "/static/css/main.05afc48f.css.map",
-    "main.6f610026.js.map": "/static/js/main.6f610026.js.map",
+    "main.28761ad7.css.map": "/static/css/main.28761ad7.css.map",
+    "main.e31d3544.js.map": "/static/js/main.e31d3544.js.map",
     "787.e526616b.chunk.js.map": "/static/js/787.e526616b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.05afc48f.css",
-    "static/js/main.6f610026.js"
+    "static/css/main.28761ad7.css",
+    "static/js/main.e31d3544.js"
   ]
 }

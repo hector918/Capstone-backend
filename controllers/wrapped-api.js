@@ -32,7 +32,6 @@ async function chatCompletion(question, context, max_token, level = undefined) {
   try {
     //level context
     const level_context = level_helper(level);
-    console.log(level_context);
     //get completion
     const completion = await openai.createChatCompletion({
       // model: "gpt-3.5-turbo",
@@ -45,11 +44,11 @@ async function chatCompletion(question, context, max_token, level = undefined) {
       messages: [
         {
           role: "system",
-          content: "You are reading comprehension AI robot assistant",
+          content: "You are reading comprehension AI robot assistant, you use the same language as the question.",
         },
         {
           role: "user",
-          content: `Answer the question based on the context below give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n${level_context}
+          content: `Answer the question based on the context below and give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n${level_context}
           \nContext: ${context}\n\n---\n\nQuestion: ${question}\nAnswer:`,
         },
       ],
@@ -137,11 +136,13 @@ async function get_translation(prompt, language = 'english', level = "2", max_to
 //kayrn's work
 async function get_an_image(prompt) {
   try {
+    //get image from openai by prompt
     const response = await openai.createImage({
       prompt: prompt_helper(prompt),
       n: 1,
       size: "512x512",
     });
+    //save and return image url
     return save_image_to_local(prompt, response.data);
   } catch (error) {
     console.log(error.response?.data?.error);
@@ -164,7 +165,7 @@ async function explainText(words, max_token = 2000) {
       messages: [
         {
           role: "user",
-          content: `Explain this word/sentence to me "${words}" and if the question can't be answered say \"I don't know\"\n\nAnswer:`,
+          content: `Explain this word/sentence to me in english "${words}" \nAnswer:`,
         },
       ],
     });
@@ -230,20 +231,22 @@ function save_image_to_local(prompt, openai_dalle_response){
   return openai_dalle_response;
   ////////////////////////////////////////
   function save_img_to_file(url, fileHash, metaData){
-
     const http = require('https');
     const fs = require('fs');
     const path_prefix = `${__dirname}/../img-files/`;
     const destinationPath = path_prefix + fileHash;
     const file = fs.createWriteStream(destinationPath);
+    //download image from remote
     http.get(url, function(response) {
       response.pipe(file);
       file.on('finish', function() {
         file.close(function() {
+          //save file
           fs.writeFile(destinationPath + ".metadata", JSON.stringify(metaData), ()=>{});
         });
       });
     }).on('error', function(err) {
+      //remove local image if error occur
       fs.unlink(destinationPath, function() {
         console.error('Error while downloading the file:', err.message);
       });
@@ -295,6 +298,7 @@ function cosineDistance(u, v, w = null) {
   return dotProduct / (Math.sqrt(magnitudeU) * Math.sqrt(magnitudeV));
 }
 function level_helper(level){
+  //get level prompt from level parameter
   switch(level){
     case "1":
       return "use simplified Elementary level of words to answer";

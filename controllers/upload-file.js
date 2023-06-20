@@ -62,22 +62,25 @@ uf.post("/", upload.array("files"), async (req, res)=>{
       const pdf_file_path = `${processed_file_path}${fileHash}/${fileHash}`;
       
       try {
+        //extract text from document
         switch(meta_data.mimetype){
           case 'application/pdf':
             text = await pdf2text(pdf_file_path);
+            save_pdf_to_pic(pdf_file_path);
           break;
           default: // treat as text file
             text = fs.readFileSync(pdf_file_path, 'utf8')
         }
-        
+        //check text result
         if(text === false) throw new Error("read text from file failed");
-        save_pdf_to_pic(pdf_file_path);
+        //render first page to png picture as thumnbnail
+        
       } catch (error) {
         console.log(error);
-        //text are false
+        //text are false remove file
         fs.unlinkSync(`${processed_file_path}${fileHash}/metadata.txt`);
         fs.unlinkSync(`${processed_file_path}${fileHash}/${fileHash}`);
-        return {error: "make sure it's a text pdf and less than 250 pages"};
+        return {error: `make sure it's a text pdf and less than ${pdf_pages_limit} pages`};
       }
       
       //next split text
@@ -109,7 +112,9 @@ uf.post("/", upload.array("files"), async (req, res)=>{
   async function save_pdf_to_pic(file_path){
     const { fromPath } = require('pdf2pic');
     const path = require('path');
+    //get file path
     file_path = path.resolve(file_path);
+    //preset options
     const options = {
       density: 100,
       saveFilename: `cover`,
@@ -118,6 +123,7 @@ uf.post("/", upload.array("files"), async (req, res)=>{
       width: 840,
       height: 1188
     };
+    //render
     const storeAsImage = fromPath(file_path, options);
     const pageToConvertAsImage = 1;
     const ret = await storeAsImage(pageToConvertAsImage);

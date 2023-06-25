@@ -7,9 +7,13 @@ rau.get('/',async (req, res) => {
   let {start, limit} = req.query;
   start = isNaN(Number(start)) ? 0 : Number(start);
   limit = Math.min(limit, 2000);
+  try {
+    const ret = await read_api_usage(start, limit);
+    res.json(ret);
+  } catch (error) {
+    res.status(500).json(error);
+  }
   
-  const ret = await read_api_usage(start, limit);
-  res.send(JSON.stringify(ret));
 })
 
 rau.get("/list_model", async (req, res) => {

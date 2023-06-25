@@ -10,7 +10,7 @@ df.get("/download_localstorage_init", async (req, res) => {
   if(fs.existsSync(file_path)){
     res.send(fs.readFileSync(file_path));
   }else{
-    res.send("{}")
+    res.status.json({});
   }
 });
 

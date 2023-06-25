@@ -58,7 +58,7 @@ rc.post("/", async (req, res)=>{
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send(JSON.stringify({result:"failed", error}));
+    res.status(500).send(JSON.stringify({result:"failed", error}));
   }
 })
 ///helper section///////////////////////////////////////////////////

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "npx nodemon --ext js server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -23,5 +23,9 @@
     "pdf2pic": "^2.2.1",
     "pg-promise": "^11.4.3",
     "session-file-store": "^1.5.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
   }
 }

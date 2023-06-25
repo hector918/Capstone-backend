@@ -32,8 +32,8 @@ ra.post("/translation", async (req, res) => {
       res.send(JSON.stringify({result:"something went wrong, contact admin"}));
     }
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
+    console.error(error);
+    res.status(500).json({ error });
   }
 });
 
@@ -59,8 +59,8 @@ ra.post("/image", async (req, res) => {
     if(ret.error) throw new Error(ret.message);
     res.json({result: "success", image_url: ret.data[0].url, alt_image_url: ret.data[1].url});
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
+    console.error(error);
+    res.status(500).json({ error });
   }
 });
 
@@ -88,8 +88,8 @@ ra.post("/text", async (req, res) => {
     const answer = ret?.choices?.[0]?.message?.content;
     res.json({result: "success", data: answer});
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
+    console.error(error);
+    res.status(500).json({ error });
   }
 });
 

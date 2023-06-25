@@ -16,7 +16,7 @@ const insert_to_api_usage = async (body) => {
     const ret = await db.one(`INSERT INTO api_usage (${col_name.join(", ")}) VALUES (${val_name.join(", ")}) RETURNING *`, body);
     return ret;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };
@@ -34,7 +34,7 @@ const read_api_usage = async (start = 0, limit = 100) => {
   try {
     return await db.any(`SELECT ${display_fields.join(',')} FROM api_usage ORDER BY timestamp DESC OFFSET $[start] LIMIT $[limit];`, { start, limit });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }

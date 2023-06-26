@@ -11,14 +11,20 @@ rau.get('/',async (req, res) => {
     const ret = await read_api_usage(start, limit);
     res.json(ret);
   } catch (error) {
-    res.status(500).json(error);
+    // console.error(error);
+    res.status(500).json({error: "Database error"});
   }
   
 })
 
 rau.get("/list_model", async (req, res) => {
-  console.log("asking list model")
-  res.send(JSON.stringify(await list_models()));
+  try {
+    console.log("asking list model")
+    res.send(JSON.stringify(await list_models()));
+  } catch (error) {
+    res.status(500).json({error: "server error"});
+  }
+  
 })
 
 module.exports = rau;

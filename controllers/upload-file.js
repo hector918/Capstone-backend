@@ -66,6 +66,7 @@ uf.post("/", upload.array("files"), async (req, res)=>{
         switch(meta_data.mimetype){
           case 'application/pdf':
             text = await pdf2text(pdf_file_path);
+            //render first page to png picture as thumnbnail
             save_pdf_to_pic(pdf_file_path);
           break;
           default: // treat as text file
@@ -73,7 +74,6 @@ uf.post("/", upload.array("files"), async (req, res)=>{
         }
         //check text result
         if(text === false) throw new Error("read text from file failed");
-        //render first page to png picture as thumnbnail
         
       } catch (error) {
         console.log(error);
@@ -95,8 +95,8 @@ uf.post("/", upload.array("files"), async (req, res)=>{
           total_usage += data.usage.total_tokens;
           return embedding_result_templete(el, data);
         } catch (error) {
-          console.log(error);
-          return {}
+          console.error(error);
+          return {error};
         }
         
       }));

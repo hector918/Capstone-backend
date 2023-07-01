@@ -52,8 +52,9 @@ const path = require('path');
 function getMetaDataByHash(fileHash){
   const ret = {fileHash, meta: {}, history: {}};
   const file_path = path.join(__dirname, docLocalPath, fileHash);
-  ///add meta text
+  ///read meta text
   if(fs.existsSync(`${file_path}/metadata.txt`)){
+    //only show selected fields
     const field_exchange = {
       "originalname" : "name",
       "mimetype" : "type",
@@ -62,7 +63,6 @@ function getMetaDataByHash(fileHash){
     const meta = JSON.parse(fs.readFileSync(`${file_path}/metadata.txt`));
     for(let x in field_exchange) ret.meta[field_exchange[x]] = meta[x];
   }
-  
   return ret;
 }
 
@@ -83,7 +83,6 @@ function getAllFiles(dirPath) {
 }
 
 function checkDocumentAvialable(folderPath){
-  
   const {fileList} = getAllFiles(folderPath);
   for(let file of fileList){
     switch(path.extname(file.filePath)){

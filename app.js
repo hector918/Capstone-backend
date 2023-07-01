@@ -16,9 +16,10 @@ app.use("/ra", require("./controllers/reading-assistance"));
 app.use("/upload_files", require("./controllers/upload-file"));
 // app.use("/download_file", require("./controllers/download-file"));
 app.use("/rau", require("./controllers/read-api-usage"));
-app.use("/pda", require("./controllers/public-document-access"));
 
-// app.use("/login", require("./controllers/login-logout"));
+
+app.use("/pda", require("./controllers/public-document-access"));
+app.use("/login", require("./controllers/user-control"));
 
 /////////////////////////////////////////////
 app.get("*", (req, res) => {

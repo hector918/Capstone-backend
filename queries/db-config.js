@@ -11,3 +11,5 @@ const cn = {
 const db = pgp(cn);
 
 module.exports = db;
+
+//pg_dump --schema-only --no-owner -t "public.*" capstone_project

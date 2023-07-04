@@ -82,7 +82,8 @@ CREATE TABLE public."user" (
     power text,
     last_seen timestamp without time zone,
     availability boolean DEFAULT false,
-    profile_setting json DEFAULT '{}'::json NOT NULL
+    profile_setting json DEFAULT '{}'::json NOT NULL,
+    temp_passcode text DEFAULT ''::text
 );
 
 

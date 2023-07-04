@@ -6,7 +6,7 @@ const fs = require('fs');
 
 app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.json());
 require('./session-config')(app);// init session
 
 app.use(express.static("./public"));
@@ -17,9 +17,10 @@ app.use("/upload_files", require("./controllers/upload-file"));
 // app.use("/download_file", require("./controllers/download-file"));
 app.use("/rau", require("./controllers/read-api-usage"));
 
-
+///07-01-2023////////////////////////////
 app.use("/pda", require("./controllers/public-document-access"));
 app.use("/login", require("./controllers/user-control"));
+app.use("/languages", require("./controllers/load-language").ll);
 
 /////////////////////////////////////////////
 app.get("*", (req, res) => {

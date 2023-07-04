@@ -8,13 +8,28 @@ const sessionStore = new PostgresqlStore({
 
 function applySession (app){
   app.use(session({
-    secret: 'sessionsecret123593405843059',
+    secret: 'sessionsecret10704202343059',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 86400000 * 100 }, // 86400000 = 1 day
-    sameSite : "lax",
+    cookie: { 
+      maxAge: 86400000 * 1, // 86400000 = 1 day
+      secure: true,
+      sameSite: "none" ,
+    }, 
     store: sessionStore
   }));
+
+  app.use(function (req, res, next) {
+    // console.log("session ID:",req.sessionID);
+    // console.log("url", req.originalUrl);
+    if (!req.session.language) {
+      req.session.language = "english"
+    }
+    if (!req.session.ipAddress) {
+      req.session.ipAddress = req.socket.remoteAddress;
+    }
+    next()
+  })
 }
 
 module.exports = applySession;

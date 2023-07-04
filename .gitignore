@@ -1,6 +1,8 @@
 /node_modules
 /uploads
 /text-files
+/sslcert
 .env
 token.js
 .DS_Store
+

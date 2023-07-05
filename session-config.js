@@ -7,6 +7,7 @@ const sessionStore = new PostgresqlStore({
 });
 
 function applySession (app){
+  //init session
   app.use(session({
     secret: 'sessionsecret10704202343059',
     resave: false,
@@ -20,15 +21,15 @@ function applySession (app){
   }));
 
   app.use(function (req, res, next) {
-    // console.log("session ID:",req.sessionID);
-    // console.log("url", req.originalUrl);
+    //session middleware adding language
     if (!req.session.language) {
-      req.session.language = "english"
+      req.session.language = "english.json"
     }
+    //adding ip address
     if (!req.session.ipAddress) {
       req.session.ipAddress = req.socket.remoteAddress;
     }
-    next()
+    next();
   })
 }
 

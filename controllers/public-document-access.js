@@ -41,7 +41,7 @@ pda.get('/pdf_thumbnail/:fileHash', async (req, res) => {
   } catch (error) {
     console.log(error);
     //if default not exists send 404
-    res.status(404).send("file not found");
+    res.status(404).send(req.trans('file not found.'));
   }
 });
 

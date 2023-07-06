@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 const create_an_user = async (newUserJson) => {
   const [col_name, val_name] = [[], []];
-  const templete = {"user_id":"text", "current_session":"text", "passcode":"text", "last_seen":"text", "availability":"bool", "ip_address":"text"};
+  const templete = {"userId":"text", "userName":"text", "current_session":"text", "password":"text", "last_seen":"text", "availability":"bool", "ip_address":"text"};
   for(let key in templete) if(newUserJson[key]){
     col_name.push(key);
     val_name.push(`$[${key}]`);
@@ -11,7 +11,7 @@ const create_an_user = async (newUserJson) => {
   if(col_name.length === 0) return false;
 
   try {
-    const ret = await db.one(`INSERT INTO "user" (${col_name.join(", ")}) VALUES (${val_name.join(", ")}) RETURNING *`, newUserJson);
+    const ret = await db.one(`INSERT INTO "user" ("${col_name.join('", "')}") VALUES (${val_name.join(", ")}) RETURNING *`, newUserJson);
     return ret;
   } catch (error) {
     console.error(error);

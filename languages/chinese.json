@@ -4,6 +4,11 @@
   "file not found":"未找到文件",
   "Sign Up/ In":"注册/登入",
   "Uses AI read the document":"使用人工智能阅读文档",
-  "and anwser questions":"并回答问题"
-
+  "and anwser questions":"并回答问题",
+  "sign in user id regex test failed.":"用户名不能通过正式表达式测试.",
+  "sign in password regex test failed.":"密码不能通过正式表达式测试.",
+  "Two password should be same.":"两次密码输入应该相同.",
+  "Add user failed.":"添加用户失败.",
+  "Login currently not available":"现时不能登入",
+  "Register failed, contact Admin.": "注册失败，联系管理员。"
 }

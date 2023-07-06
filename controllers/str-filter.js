@@ -10,7 +10,7 @@ const userIdRegex = {
   ]
 };
 const passwordRegex = {
-  regex: "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/",
+  regex: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
   explanation: [
     `requires at least one lowercase letter.`,
     `requires at least one uppercase letter.`,

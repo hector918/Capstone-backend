@@ -4,6 +4,11 @@
   "file not found":"file not found",
   "Sign Up/ In":"Sign Up/ In",
   "Uses AI read the document":"Uses AI read the document",
-  "and anwser questions":"and anwser questions"
-  
+  "and anwser questions":"and anwser questions",
+  "sign in user id regex test failed.":"sign in user id regex test failed.",
+  "sign in password regex test failed.":"sign in password regex test failed.",
+  "Two password should be same.":"Two password should be same.",
+  "Add user failed.":"Add user failed.",
+  "Login currently not available":"Login currently not available",
+  "Register failed, contact Admin.": "Register failed, contact Admin."
 }

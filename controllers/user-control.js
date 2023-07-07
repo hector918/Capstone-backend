@@ -17,19 +17,22 @@ uc.get("/available", async(req, res) => {
 uc.post('/register', async(req, res) => {
   try {
     let {userId, password} = req.body;
-    console.log(userId, password);
+    //define new user json
     let newUserJson = { 
       userId, 
       password: user_password_hash(password), 
       availability: true, 
       current_session: req.sessionID,
+      userName: generateUsername(),
       last_seen: new Date(),
       ip_address: req.socket.remoteAddress,
     }
     console.log(newUserJson);
+    //insert in to db
     const ret = await create_an_user(newUserJson);
-    console.log(ret);
-    res.json({});
+    if(ret !== false){
+      res.json({userId: ret.userId});
+    } else throw req.trans("Add user failed.");
   } catch (error) {
     console.error(error);
     res.status(500).json({error});
@@ -47,5 +50,17 @@ uc.post('/check_userID', async(req, res) => {
     res.status(500).json({error});
   }
 });
-
+//////////////////////////////////////
+function generateUsername() {
+  var adjectives = ['happy', 'sad', 'funny', 'serious', 'clever', 'smart', 'kind', 'brave', 'shiny', 'silly', 'energetic', 'graceful', 'playful', 'witty', 'gentle', 'curious', 'charming', 'vibrant', 'daring', 'fantastic'];
+  var nouns = ['penguin', 'elephant', 'tiger', 'koala', 'dolphin', 'lion', 'monkey', 'giraffe', 'unicorn', 'octopus', 'kangaroo', 'panda', 'zebra', 'parrot', 'dinosaur', 'jaguar', 'butterfly', 'peacock', 'otter', 'hedgehog'];
+  
+  var adjectiveIndex = Math.floor(Math.random() * adjectives.length);
+  var nounIndex = Math.floor(Math.random() * nouns.length);
+  
+  var username = adjectives[adjectiveIndex] + ' ' + nouns[nounIndex];
+  
+  return username;
+}
+//////////////////////////////////////
 module.exports = uc;

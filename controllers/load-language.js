@@ -57,7 +57,7 @@ function getTranslation(app){
 }
 //////////////////////////////
 function defaultOutput(str){
-  if(req.language[str]) return str;
+  if(this.language[str]) return this.language[str];
   return str;
 }
 function getLanguageFile(language){

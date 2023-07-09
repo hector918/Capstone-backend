@@ -5,8 +5,8 @@ const userIdRegex = {
     `specifies the minimum and maximum length of the user ID, which in this case is between 4 and 12 characters.`,
   ],
   forHint: [
-    ["^[a-zA-Z0-9_]{4,12}$", '- User Id should between 4 - 12 characters long.'],
-    ["^[a-zA-Z0-9_]{4,12}$", '- and contain only letters, digits, or underscores.']
+    ["^[a-zA-Z0-9_]{4,12}$", 'User Id should between 4 - 12 characters long.'],
+    ["^[a-zA-Z0-9_]{4,12}$", 'and contain only letters, digits, or underscores.']
   ]
 };
 const passwordRegex = {
@@ -19,11 +19,11 @@ const passwordRegex = {
     `matches a combination of letters, digits, and special characters, with a minimum length of 8 characters.`,
   ],
   forHint: [
-    ["^(?=.*[a-z])", '- requires at least one lowercase letter.'],
-    ["^(?=.*[A-Z])", '- requires at least one uppercase letter.'],
-    [`\\d`, '- requires at least one digit.'],
-    ["^(?=.*[@$!%*?&])", '- requires at least one special character (e.g., @, $, !, %, *, ?, or &).'],
-    ["^[A-Za-z\\d@$!%*?&]{8,}$", '- with a minimum length of 8 characters.']
+    ["^(?=.*[a-z])", 'requires at least one lowercase letter.'],
+    ["^(?=.*[A-Z])", 'requires at least one uppercase letter.'],
+    [`\\d`, 'requires at least one digit.'],
+    ["^(?=.*[@$!%*?&])", 'requires at least one special character (e.g., @, $, !, %, *, ?, or &).'],
+    ["^[A-Za-z\\d@$!%*?&]{8,}$", 'with a minimum length of 8 characters.']
   ]
 };
 //////////////////////////////////////////

@@ -10,5 +10,26 @@
   "Two password should be same.":"Two password should be same.",
   "Add user failed.":"Add user failed.",
   "Login currently not available":"Login currently not available",
-  "Register failed, contact Admin.": "Register failed, contact Admin."
+  "Register failed, contact Admin.": "Register failed, contact Admin.",
+  "Successfully registered": "Successfully registered",
+  "This message will automatically close.": "This message will automatically close.",
+  "Sign Up": "Sign Up",
+  "Sign In": "Sign In",
+  "User Id": "User Id",
+  "The name is invalid.": "The name is invalid.",
+  "Enter password": "Enter password",
+  "Password": "Password",
+  "re-Enter password": "re-Enter password",
+  "Login": "Login",
+  "requires at least one lowercase letter.": "requires at least one lowercase letter.",
+  "requires at least one uppercase letter.": "requires at least one uppercase letter.",
+  "requires at least one digit.": "requires at least one digit.",
+  "requires at least one special character (e.g., @, $, !, %, *, ?, or &).": "requires at least one special character (e.g., @, $, !, %, *, ?, or &).",
+  "with a minimum length of 8 characters.": "with a minimum length of 8 characters.",
+  "User Id should between 4 - 12 characters long.": "User Id should between 4 - 12 characters long.",
+  "and contain only letters, digits, or underscores.": "and contain only letters, digits, or underscores.",
+  "Discover the full story - let AI guide you through every page.": "Discover the full story - let AI guide you through every page.",
+  "User ID or password not matched.": "User ID or password not matched.",
+  "Ooops..., contact Admin please.": "Ooops..., contact Admin please."
+
 }

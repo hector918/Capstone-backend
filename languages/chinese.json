@@ -10,5 +10,27 @@
   "Two password should be same.":"两次密码输入应该相同.",
   "Add user failed.":"添加用户失败.",
   "Login currently not available":"现时不能登入",
-  "Register failed, contact Admin.": "注册失败，联系管理员。"
+  "Register failed, contact Admin.": "注册失败，联系管理员。",
+  "Successfully registered": "注册成功",
+  "This message will automatically close.": "此消息会自动关闭",
+  "Sign Up": "注册",
+  "Sign In": "登陆",
+  "User Id": "用户ID",
+  "The name is invalid.": "非法名字",
+  "Enter password": "输入密码",
+  "Password": "密码",
+  "re-Enter password": "重新输入密码",
+  "Login": "登陆",
+  "requires at least one lowercase letter.": "至少需要一个小写英文字母",
+  "requires at least one uppercase letter.": "至少需要一个大写英文字母",
+  "requires at least one digit.": "至少需要一个数字",
+  "requires at least one special character (e.g., @, $, !, %, *, ?, or &).": "至少需要一个特殊字符 (例如 @, $, !, %, *, ?, or &).",
+  "with a minimum length of 8 characters.": "至少需要有八个字符",
+  "User Id should between 4 - 12 characters long.": "用户ID需要有4到12个字符",
+  "and contain only letters, digits, or underscores.": "只能包括字符数字与下划线",
+  "Discover the full story - let AI guide you through every page.": "探索故事 - AI帮你了解每一页",
+  "User ID or password not matched.": "用户名或密码不匹配.",
+  "Ooops..., contact Admin please.": "Ooops..., 揾人来帮你了喂."
+
+
 }

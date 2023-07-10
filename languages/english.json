@@ -30,6 +30,11 @@
   "and contain only letters, digits, or underscores.": "and contain only letters, digits, or underscores.",
   "Discover the full story - let AI guide you through every page.": "Discover the full story - let AI guide you through every page.",
   "User ID or password not matched.": "User ID or password not matched.",
-  "Ooops..., contact Admin please.": "Ooops..., contact Admin please."
+  "Ooops..., contact Admin please.": "Ooops..., contact Admin please.",
+  "Me": "Me",
+  "Successed logout.": "Successed logout.",
+  "Logout failed.": "Logout failed.",
+  "Successed login.": "Successed login."
+
 
 }

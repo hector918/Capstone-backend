@@ -30,7 +30,13 @@
   "and contain only letters, digits, or underscores.": "只能包括字符数字与下划线",
   "Discover the full story - let AI guide you through every page.": "探索故事 - AI帮你了解每一页",
   "User ID or password not matched.": "用户名或密码不匹配.",
-  "Ooops..., contact Admin please.": "Ooops..., 揾人来帮你了喂."
+  "Ooops..., contact Admin please.": "Ooops..., 揾人来帮你了喂.",
+  "Me": "我",
+  "Successed logout.": "成功登出.",
+  "Logout failed.": "登出失败.",
+  "Successed login.": "成功登陆."
+
+
 
 
 }

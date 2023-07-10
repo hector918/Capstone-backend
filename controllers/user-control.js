@@ -10,7 +10,7 @@ uc.get("/available", async(req, res) => {
     res.json({userIdRegex, passwordRegex});
   } catch (error) {
     console.error(error);
-    res.status(500).json({error});
+    res.status(500).json({error: error.message});
   }
 });
 
@@ -35,16 +35,18 @@ uc.post('/register', async(req, res) => {
     } else throw req.trans("Add user failed.");
   } catch (error) {
     console.error(error);
-    res.status(500).json({error});
+    res.status(500).json({error: error.message});
   }
 });
 
 uc.get('/logout', async (req,res) => {
   try {
-    console.log(req.session.user);
+    req.session.userInfo = {};
+    req.session.save();
+    res.json({data: req.trans("Successed logout.")})
   } catch (error) {
     console.error(error);
-    res.status(500).json({"error":"error"});
+    res.status(500).json({"error": "error"});
   }
 });
 
@@ -54,20 +56,30 @@ uc.post("/login", async(req, res) => {
     const ret = await login({
       userid: user_input_filter(userId), password: user_input_filter(password)
     })
-    if(ret===false){
+    if(ret === false){
       //if login failed
       res.json({error: req.trans("User ID or password not matched.")})
     }else{
       //if login successed
       const templete = {"username":"text",  "last_seen":"text", "credit": "text", "profile_setting": "json"};
       for(let x in templete) if(ret[x]) templete[x] = ret[x];
-      res.json(templete);
+      res.json({data: templete});
       req.session.userInfo = templete;
       req.session.save();
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({error: req.trans("Ooops..., contact Admin please.")});
+  }
+});
+
+uc.get('/check_login_status', async(req, res) => {
+  try {
+    const ret = req.session.userInfo || {};
+    res.json({data: ret});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: error.message});
   }
 });
 
@@ -79,7 +91,7 @@ uc.post('/check_userID', async(req, res) => {
     res.json({result});
   } catch (error) {
     console.error(error);
-    res.status(500).json({error});
+    res.status(500).json({error: error.message});
   }
 });
 //////////////////////////////////////

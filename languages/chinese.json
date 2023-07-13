@@ -3,8 +3,6 @@
   "About":"关于",
   "file not found":"未找到文件",
   "Sign Up/ In":"注册/登入",
-  "Uses AI read the document":"使用人工智能阅读文档",
-  "and anwser questions":"并回答问题",
   "sign in user id regex test failed.":"用户名不能通过正式表达式测试.",
   "sign in password regex test failed.":"密码不能通过正式表达式测试.",
   "Two password should be same.":"两次密码输入应该相同.",
@@ -21,6 +19,7 @@
   "Password": "密码",
   "re-Enter password": "重新输入密码",
   "Login": "登陆",
+  "Logout": "登出",
   "requires at least one lowercase letter.": "至少需要一个小写英文字母",
   "requires at least one uppercase letter.": "至少需要一个大写英文字母",
   "requires at least one digit.": "至少需要一个数字",
@@ -34,9 +33,15 @@
   "Me": "我",
   "Successed logout.": "成功登出.",
   "Logout failed.": "登出失败.",
-  "Successed login.": "成功登陆."
-
-
-
+  "Successed login.": "成功登陆.",
+  "Profile": "我的资料",
+  "Uses AI": "让人工智能",
+  "read the document": "阅读文件",
+  "and anwser": "并回答",
+  "questions.": "问题。",
+  "Discover the full story": "探索故事",
+  "let AI guide you through every page.": "AI帮你了解每一页。",
+  "Under construction": "正在建设中",
+  "Start>": "开始>"
 
 }

@@ -3,8 +3,6 @@
   "About":"About",
   "file not found":"file not found",
   "Sign Up/ In":"Sign Up/ In",
-  "Uses AI read the document":"Uses AI read the document",
-  "and anwser questions":"and anwser questions",
   "sign in user id regex test failed.":"sign in user id regex test failed.",
   "sign in password regex test failed.":"sign in password regex test failed.",
   "Two password should be same.":"Two password should be same.",
@@ -21,6 +19,7 @@
   "Password": "Password",
   "re-Enter password": "re-Enter password",
   "Login": "Login",
+  "Logout": "Logout",
   "requires at least one lowercase letter.": "requires at least one lowercase letter.",
   "requires at least one uppercase letter.": "requires at least one uppercase letter.",
   "requires at least one digit.": "requires at least one digit.",
@@ -34,7 +33,15 @@
   "Me": "Me",
   "Successed logout.": "Successed logout.",
   "Logout failed.": "Logout failed.",
-  "Successed login.": "Successed login."
-
+  "Successed login.": "Successed login.",
+  "Profile": "Profile",
+  "Uses AI": "Uses AI",
+  "read the document": "read the document",
+  "and anwser": "and anwser",
+  "questions.": "questions.",
+  "Discover the full story": "Discover the full story",
+  "let AI guide you through every page.": "let AI guide you through every page.",
+  "Under construction": "Under construction",
+  "Start>": "Start>"
 
 }

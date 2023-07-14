@@ -5,6 +5,8 @@ const docLocalPath = '../text-files';
 
 pda.post("/list", async (req, res) => {
   try {
+    console.log(req.headers.host);
+    
     //reading body
     // let {type} = req.body;
     const file_path = path.join(__dirname, `${docLocalPath}`);

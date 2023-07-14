@@ -14,13 +14,12 @@ require('./controllers/load-language').getTranslation(app);
 
 ///////
 
-app.use(express.static("./public"));
-
 app.use("/rc", require("./controllers/reading-comprehension"));
 app.use("/ra", require("./controllers/reading-assistance"));
 app.use("/upload_files", require("./controllers/upload-file"));
 // app.use("/download_file", require("./controllers/download-file"));
 app.use("/rau", require("./controllers/read-api-usage"));
+
 
 ///07-01-2023////////////////////////////
 app.use("/pda", require("./controllers/public-document-access"));
@@ -28,6 +27,8 @@ app.use("/login", require("./controllers/user-control"));
 app.use("/languages", require("./controllers/load-language").ll);
 
 /////////////////////////////////////////////
+app.use(express.static("./public"));
+
 app.get("*", (req, res) => {
   // console.log(req.session,req.sessionID,"a")
   // console.log(req.socket.remoteAddress);

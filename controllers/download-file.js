@@ -50,7 +50,7 @@ df.get("/meta/:fileHash", async (req, res) => {
       throw("file not found");
     }
   } catch (error) {
-    res.status(404).send("file not found");
+    res.status(404).json({error: req.trans("file not found")});
   }
   /*
     lastModified:  1680656982986

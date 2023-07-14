@@ -42,6 +42,11 @@
   "Discover the full story": "探索故事",
   "let AI guide you through every page.": "AI帮你了解每一页。",
   "Under construction": "正在建设中",
-  "Start>": "开始>"
+  "Start>": "开始>",
+  "Click me to upload file...": "点我开始上传文件...",
+  "File exists:": "文件是否存在:",
+  "File name:": "文件名:",
+  "Start upload...": "开始上传...",
+  "Upload": "上传文件"
 
 }

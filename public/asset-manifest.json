@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "./static/css/main.6dc73aee.css",
+    "main.js": "./static/js/main.aec9edef.js",
+    "static/js/787.6dd892df.chunk.js": "./static/js/787.6dd892df.chunk.js",
+    "static/media/seamless-pattern-background-purple-vector-4822052-0.jpg": "./static/media/seamless-pattern-background-purple-vector-4822052-0.a2e0bacce9079350481d.jpg",
+    "index.html": "./index.html",
+    "main.6dc73aee.css.map": "./static/css/main.6dc73aee.css.map",
+    "main.aec9edef.js.map": "./static/js/main.aec9edef.js.map",
+    "787.6dd892df.chunk.js.map": "./static/js/787.6dd892df.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6dc73aee.css",
+    "static/js/main.aec9edef.js"
+  ]
+}

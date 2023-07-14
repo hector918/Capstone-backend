@@ -3,7 +3,7 @@ const pda = express.Router();
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const docLocalPath = '../text-files';
 
-pda.post("/list", async (req, res) => {
+pda.get("/list", async (req, res) => {
   try {
     console.log("in pda list", req.headers.host);
 

@@ -5,8 +5,9 @@ const upload = multer({ dest: "uploads/" });
 const crypto = require('crypto');
 const fs = require('fs');
 const pdf_pages_limit = 1000;
+const processed_file_path = `${__dirname}/../text-files/`;
 //express operation enterance//////////////////////////////
-uf.post("/", upload.array("files"), async (req, res)=>{
+uf.post("/", upload.array("files"), async(req, res) => {
   try {
     if(req.files?.length > 0){
       //only process first file from req 
@@ -40,7 +41,7 @@ uf.post("/", upload.array("files"), async (req, res)=>{
   
   //////////////////////////////////////////////////////
   async function process_file(filepath, meta_data){
-    const processed_file_path = `${__dirname}/../text-files/`;
+    
     const filecontent = fs.readFileSync(`${__dirname}/../${filepath}`);
     //create file hash
     const fileHash = crypto.createHash('sha256').update(filecontent).digest('hex');
@@ -161,6 +162,18 @@ uf.post("/", upload.array("files"), async (req, res)=>{
     return ret;
   }
 });
+
+// uf.get('/checkFileExists/:fileHash', async(req, res) => {
+//   try {
+//     const {fileHash} = req.params;
+    
+//     console.log("in check file exists", fs.existsSync(`${processed_file_path}${fileHash}`));
+//     res.json({});
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({error: error.message});
+//   }
+// });
 
 
 module.exports = uf;

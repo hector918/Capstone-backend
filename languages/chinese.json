@@ -47,6 +47,9 @@
   "File exists:": "文件是否存在:",
   "File name:": "文件名:",
   "Start upload...": "开始上传...",
-  "Upload": "上传文件"
+  "Upload": "上传文件",
+  "You need to login first.": "请先登陆.",
+  "In upload file": "上传文件中"
+
 
 }

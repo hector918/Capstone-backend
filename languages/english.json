@@ -47,6 +47,8 @@
   "File exists:": "File exists:",
   "File name:": "File name:",
   "Start upload...": "Start upload...",
-  "Upload": "Upload"
+  "Upload": "Upload",
+  "You need to login first.": "You need to login first.",
+  "In upload file": "In upload file"
 
 }

@@ -33,11 +33,11 @@ uf.post("/", upload.array("files"), VerifyUserLogin, async(req, res) => {
         });
       }
     }else{
-      res.json({message: "no file receive" });
+      throw new Error (req.trans("no file receive"));
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send("error: contact admin");
+    console.error(error);
+    res.status(500).json({"error": error.message});
   }
   
   //////////////////////////////////////////////////////

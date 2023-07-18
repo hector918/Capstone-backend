@@ -4,8 +4,8 @@ const {check_userID_available, user_password_hash, create_an_user, login, log_us
 const {userIdRegex, passwordRegex, user_input_filter} = require('./str-filter');
 //////////////////////////////////////
 uc.get("/available", async(req, res) => {
-  console.log(req.session,req.sessionID,"a")
-  console.log(req.socket.remoteAddress);
+  // console.log(req.session,req.sessionID,"a")
+  // console.log(req.socket.remoteAddress);
   try {
     res.json({userIdRegex, passwordRegex});
   } catch (error) {
@@ -27,11 +27,12 @@ uc.post('/register', async(req, res) => {
       last_seen: new Date().toUTCString(),
       ip_address: req.socket.remoteAddress,
     }
-    console.log(newUserJson);
+    // console.log(newUserJson);
     //insert in to db
     const ret = await create_an_user(newUserJson);
     if(ret !== false){
       res.json({userId: ret.user_id});
+      log_user_action(ret.user_id, "user register", JSON.stringify(ret));
     }else throw req.trans("Add user failed.");
   } catch (error) {
     console.error(error);
@@ -98,7 +99,7 @@ uc.post('/check_userID', async(req, res) => {
   }
 });
 //////////////////////////////////////
-function VerifyUserLogin(req, res, next){
+function verifyUserLogin(req, res, next){
   try {
     if(req.session.userInfo === undefined){
       //new session, no login also
@@ -115,6 +116,7 @@ function VerifyUserLogin(req, res, next){
     res.json({"error": error.message});
   }
 }
+////////////////////////////////////////
 function generateUsername() {
   var adjectives = ['happy', 'sad', 'funny', 'serious', 'clever', 'smart', 'kind', 'brave', 'shiny', 'silly', 'energetic', 'graceful', 'playful', 'witty', 'gentle', 'curious', 'charming', 'vibrant', 'daring', 'fantastic'];
   var nouns = ['penguin', 'elephant', 'tiger', 'koala', 'dolphin', 'lion', 'monkey', 'giraffe', 'unicorn', 'octopus', 'kangaroo', 'panda', 'zebra', 'parrot', 'dinosaur', 'jaguar', 'butterfly', 'peacock', 'otter', 'hedgehog'];
@@ -127,4 +129,4 @@ function generateUsername() {
   return username;
 }
 //////////////////////////////////////
-module.exports = {uc , VerifyUserLogin};
+module.exports = {uc , verifyUserLogin};

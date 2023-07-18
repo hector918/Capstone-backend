@@ -26,7 +26,9 @@ app.use("/rau", require("./controllers/read-api-usage"));
 app.use("/pda", require("./controllers/public-document-access"));
 app.use("/login", require("./controllers/user-control").uc);
 app.use("/languages", require("./controllers/load-language").ll);
-
+/////////////////////////////////////////////
+//for testing remove it later
+app.use("/testing", require("./controllers/testing"));
 /////////////////////////////////////////////
 
 app.get("*", (req, res) => {

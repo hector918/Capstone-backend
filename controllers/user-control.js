@@ -95,6 +95,18 @@ uc.post('/check_userID', async(req, res) => {
   }
 });
 //////////////////////////////////////
+function VerifyUserLogin(req, res, next){
+  console.log("in verify user login",req.session.userInfo);
+  if(req.session.userInfo === undefined){
+    //new session, no login also
+  }else if(req.session.userInfo.userId === undefined){
+    //was login, but logout already
+  }else if(req.session.userInfo.userId){
+    //login user
+  }
+  //if success
+  next();
+}
 function generateUsername() {
   var adjectives = ['happy', 'sad', 'funny', 'serious', 'clever', 'smart', 'kind', 'brave', 'shiny', 'silly', 'energetic', 'graceful', 'playful', 'witty', 'gentle', 'curious', 'charming', 'vibrant', 'daring', 'fantastic'];
   var nouns = ['penguin', 'elephant', 'tiger', 'koala', 'dolphin', 'lion', 'monkey', 'giraffe', 'unicorn', 'octopus', 'kangaroo', 'panda', 'zebra', 'parrot', 'dinosaur', 'jaguar', 'butterfly', 'peacock', 'otter', 'hedgehog'];
@@ -107,4 +119,4 @@ function generateUsername() {
   return username;
 }
 //////////////////////////////////////
-module.exports = uc;
+module.exports = {uc , VerifyUserLogin};

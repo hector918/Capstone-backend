@@ -24,7 +24,7 @@ app.use("/rau", require("./controllers/read-api-usage"));
 
 ///07-01-2023////////////////////////////
 app.use("/pda", require("./controllers/public-document-access"));
-app.use("/login", require("./controllers/user-control"));
+app.use("/login", require("./controllers/user-control").uc);
 app.use("/languages", require("./controllers/load-language").ll);
 
 /////////////////////////////////////////////

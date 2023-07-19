@@ -1,7 +1,6 @@
 const db = require("./db-config");
 const crypto = require('crypto');
-
-
+//////////////////////////////////////////////////
 const log_user_action = (user_id, action, result = "") => {
   const timestamp = new Date().toUTCString();
   try {
@@ -54,7 +53,7 @@ const check_userID_available = async (user_id) => {
 const user_password_hash = (password) => {
   return crypto.createHash('sha256').update(password).digest('hex');
 }
-
+//////////////////////////////////////////////////
 module.exports = { 
   create_an_user, 
   check_userID_available, 

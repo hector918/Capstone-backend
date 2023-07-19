@@ -2,11 +2,12 @@ const express = require("express");
 const pda = express.Router();
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const docLocalPath = '../text-files';
+const path = require('path');
+const fs = require('fs');
 
 pda.get("/list", async (req, res) => {
   try {
     console.log("in pda list", req.headers.host);
-
     //reading body
     // let {type} = req.body;
     const file_path = path.join(__dirname, `${docLocalPath}`);
@@ -47,10 +48,19 @@ pda.get('/pdf_thumbnail/:fileHash', async (req, res) => {
   }
 });
 
+///get pdf file meta data by hash
+pda.get("/meta/:fileHash", async (req, res) => {
+  try {
+    const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
+    const {meta} = getMetaDataByHash(fileHash);
+    if(meta['name'] !== undefined){
+      res.json(meta);
+    }else throw new Error("file not found");
+  } catch (error) {
+    res.status(404).json({error: req.trans(error.message)});
+  }
+})
 ////////////////////////////////////////
-const fs = require('fs');
-const path = require('path');
-
 function getMetaDataByHash(fileHash){
   const ret = {fileHash, meta: {}, history: {}};
   const file_path = path.join(__dirname, docLocalPath, fileHash);
@@ -108,4 +118,4 @@ function checkDocumentAvialable(folderPath){
   return true;
 }
 
-module.exports = pda;
+module.exports = {pda, getMetaDataByHash};

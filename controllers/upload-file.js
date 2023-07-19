@@ -5,6 +5,7 @@ const fs = require('fs');
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const {verifyUserLogin} = require('./user-control');
+const {insertDocument} = require('../queries/documents');
 const pdf_pages_limit = 1000;
 const processed_file_path = `${__dirname}/../text-files/`;
 //express operation enterance//////////////////////////////
@@ -16,7 +17,7 @@ uf.post("/", upload.array("files"), verifyUserLogin, async(req, res) => {
       //respond
       if(!ret.error){
         res.json({...ret, message: "Successfully uploaded"});
-        
+        insertDocument(req.session.userInfo.userId, ret.fileHash);
       }else{
         res.status(400).json({...ret});
       }

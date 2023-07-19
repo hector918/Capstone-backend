@@ -16,20 +16,32 @@ const insertDocument = async(user_id, filehash) => {
     console.log(ret);
   } catch (error) {
     console.error(error);
-
   }
 }
+
+const getDocumentsByUser = async(user_id) => {
+  try {
+    const ret = await db.many(`SELECT d.filehash, u.timestamp, u.is_share, u.is_favorite, u.order FROM user_to_documents u JOIN documents d ON u.document_id = d.id WHERE u.user_id = $[user_id];`, {user_id});
+    console.log(ret);
+    return ret;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 const removeDocumentFromUser = async(user_id, document_id) => {
   try {
     const ret = await db.one(`DELETE FROM user_to_documents WHERE user_id = $[user_id] and document_id = $[document_id] RETURNING id`, {user_id, document_id});
-    console.log(ret);
+    return ret;
   } catch (error) {
     console.error(error);
+    return false;
   }
 }
 //////////////////////////////////////////////
 module.exports = {
   insertDocument,
   removeDocumentFromUser,
+  getDocumentsByUser,
 }

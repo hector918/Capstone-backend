@@ -117,7 +117,6 @@ uf.post("/",  upload.array("files"),verifyUserLogin, async(req, res) => {
       for(let {text} of pages) text.items.forEach(({str}) => {
         pureText += str;
       })
-      console.log(pureText);
       return pureText;
     } catch (error) {
       console.error("in get pure text", error);

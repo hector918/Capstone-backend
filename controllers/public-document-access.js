@@ -19,10 +19,10 @@ pda.get("/list", async (req, res) => {
         retList.push(getMetaDataByHash(fileHash));
       } 
     })
-    res.json({popular: retList, favorite: retList, collection: retList});
+    res.json({"data": {popular: retList, favorite: retList, collection: retList, timestamp: new Date()}});
   } catch (error) {
     console.log(error);
-    res.status(500).json([]);
+    res.status(500).json({error: req.trans(error.message)});
   }
 });
 
@@ -32,7 +32,7 @@ pda.get('/pdf_thumbnail/:fileHash', async (req, res) => {
   const file_path = path.join(__dirname, `/../text-files/${fileHash}`);
   try {
     //check file exists and send it
-    const coverPath = `${file_path}/cover.1.png`;
+    const coverPath = `${file_path}/cover.jpg`;
     //if cover not exists send default
     const defaultCoverPath = path.join(__dirname, '../img-files', "binarymindlogorectangle");
     if(fileHash !== false && fs.existsSync(coverPath)){
@@ -59,7 +59,20 @@ pda.get("/meta/:fileHash", async (req, res) => {
   } catch (error) {
     res.status(404).json({error: req.trans(error.message)});
   }
-})
+});
+
+//get pdf file content by hash
+pda.get("/:fileHash", async (req, res) => {
+  const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
+  // const processed_file_path = `${__dirname}/../text-files/`;
+  const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, fileHash);
+  if(fileHash !== false && fs.existsSync(file_path)){
+    res.sendFile(file_path);
+  }else{
+    res.status(404).send("file not found");
+  }
+});
+
 ////////////////////////////////////////
 function getMetaDataByHash(fileHash){
   const ret = {fileHash, meta: {}, history: {}};

@@ -9,7 +9,7 @@ const {insertDocument} = require('../queries/documents');
 const pdf_pages_limit = 1000;
 const processed_file_path = `${__dirname}/../text-files/`;
 //express operation enterance//////////////////////////////
-uf.post("/", upload.array("files"), verifyUserLogin, async(req, res) => {
+uf.post("/",  upload.array("files"),verifyUserLogin, async(req, res) => {
   try {
     if(req.files?.length > 0){
       //only process first file from req 
@@ -38,7 +38,6 @@ uf.post("/", upload.array("files"), verifyUserLogin, async(req, res) => {
       throw new Error (req.trans("no file receive"));
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({"error": error.message});
   }
   
@@ -47,7 +46,7 @@ uf.post("/", upload.array("files"), verifyUserLogin, async(req, res) => {
     // //remove old man and the sea
     // removeOldman()
     //////////////////////////////
-    console.log("in process file");
+    // console.log("in process file");
     const filecontent = fs.readFileSync(`${__dirname}/../${filepath}`);
     //create file hash
     const fileHash = crypto.createHash('sha256').update(filecontent).digest('hex');
@@ -67,7 +66,6 @@ uf.post("/", upload.array("files"), verifyUserLogin, async(req, res) => {
       let text = false;
       //checking file type
       const pdf_file_path = `${processed_file_path}${fileHash}/${fileHash}`;
-      
       try {
         //extract text from document
         switch(meta_data.mimetype){
@@ -119,6 +117,7 @@ uf.post("/", upload.array("files"), verifyUserLogin, async(req, res) => {
       for(let {text} of pages) text.items.forEach(({str}) => {
         pureText += str;
       })
+      console.log(pureText);
       return pureText;
     } catch (error) {
       console.error("in get pure text", error);

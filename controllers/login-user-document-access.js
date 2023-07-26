@@ -20,7 +20,7 @@ luda.get('/library', verifyUserLogin, async(req, res) => {
       ret[idx] = {...ret[idx], ...meta};
     }
     //return
-    res.json(ret);
+    res.json({data: ret});
     //record user Activity
     log_user_action(userId, 'user asking for library data', JSON.stringify(ret));
   } catch (error) {

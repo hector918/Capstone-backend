@@ -68,7 +68,9 @@ uc.post("/login", async(req, res) => {
       res.json({data: templete});
       //add user id back to session
       templete['userId'] = ret['user_id'];
+
       req.session.userInfo = templete;
+
       req.session.save();
     }
   } catch (error) {
@@ -101,6 +103,7 @@ uc.post('/check_userID', async(req, res) => {
 //////////////////////////////////////
 function verifyUserLogin(req, res, next){
   try {
+    // console.log("in verify user", req.session.userInfo)
     if(req.session.userInfo === undefined){
       //new session, no login also
       throw new Error (req.trans("You need to login first."));

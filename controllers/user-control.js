@@ -56,7 +56,8 @@ uc.post("/login", async(req, res) => {
   try {
     let {userId, password} = req.body;
     const ret = await login({
-      user_id: user_input_filter(userId), password: user_input_filter(password)
+      user_id: user_input_filter(userId), 
+      password: user_input_filter(password)
     })
     if(ret === false){
       //if login failed

@@ -1,5 +1,26 @@
 const db = require("./db-config");
 
+const InsertDocumentLinkToUser = async(user_id, filehash) => {
+  try {
+    const json = {user_id, filehash, timestamp: new Date().toUTCString()};
+    const ret = await db.one(`
+      WITH selected_documents AS (
+        SELECT id
+        FROM documents
+        WHERE documents.filehash = $[filehash]
+      )
+      INSERT INTO user_to_documents (user_id, document_id, timestamp)
+      SELECT $[user_id], selected_documents.id, $[timestamp]
+      FROM selected_documents
+      RETURNING *;
+    `, json)
+    return ret;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 const insertDocument = async(user_id, filehash) => {
   try {
     const ret = await db.one(`
@@ -16,6 +37,7 @@ const insertDocument = async(user_id, filehash) => {
     console.log(ret);
   } catch (error) {
     console.error(error);
+    
   }
 }
 
@@ -44,4 +66,5 @@ module.exports = {
   insertDocument,
   removeDocumentFromUser,
   getDocumentsByUser,
+  InsertDocumentLinkToUser
 }

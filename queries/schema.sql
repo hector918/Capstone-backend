@@ -56,3 +56,22 @@ CREATE TABLE user_logs (
     result text,
     timestamp timestamp without time zone
 );
+
+
+CREATE TABLE user_to_comprehension_history (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id text,
+    comperhension_history_id integer,
+    is_share boolean DEFAULT false,
+    timestamp timestamp without time zone
+);
+
+CREATE TABLE reading_comprehension_chat_history (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    q text,
+    result json,
+    timestamp timestamp without time zone,
+    filehash text,
+    usage integer,
+    level text
+);

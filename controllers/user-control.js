@@ -127,7 +127,6 @@ function generateUsername() {
   
   var adjectiveIndex = Math.floor(Math.random() * adjectives.length);
   var nounIndex = Math.floor(Math.random() * nouns.length);
-  
   var username = adjectives[adjectiveIndex] + ' ' + nouns[nounIndex];
   
   return username;

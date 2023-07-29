@@ -1,11 +1,20 @@
 const express = require("express");
 const rc = express.Router();
 const {get_embedding, cosineDistance, embedding_result_templete, chatCompletion} = require('./wrapped-api');
+const {
+  insertReadingComprehensionChatHistory, 
+  readReadingComprehensionHistory,
+  addReadingComprehensionAnswerLinkToUser,
+} = require('../queries/reading-comprehension');
+const {log_user_action} = require('../queries/user-control');
+
 const {user_input_filter} = require('./str-filter');
 const [ max_token_for_embedding, max_token_for_completion ] = [5000, 2000];
-//web api Entrance////////////////////////////////////////////////////
-
-rc.post("/", async (req, res)=>{
+//web api Entrance/////////////////////////////////////////
+rc.post("/", async (req, res) => {
+  //read from history first, if question asked before, pull the record,  
+  ////
+  
   //record api usage to db
   const {insert_to_api_usage} = require('../queries/api-usage');
   
@@ -13,10 +22,33 @@ rc.post("/", async (req, res)=>{
   let {q, fileHash, level} = req.body;
   //check user input
   q = user_input_filter(q);
-  //error handling
+  const ret = await readReadingComprehensionHistory(fileHash, q, level);
+  if(!ret){
+    //read failed
+    //no record then run the normal text embedding procedure
+  }else{
+    //record found
+    const {userId} = req.session.userInfo;
+    if(userId){
+      //record found and login, Compare user id, if not the same add the document link under user
+      
+      //if this question not linked to current user, link it to current user
+      if(userId !== ret.user_id){
+        //link to user
+        addReadingComprehensionAnswerLinkToUser(userId, ret.id);
+      }
+    }else{
+      //record found and no login, just return found record
+    }
+    //trim user_id from the found record and return 
+    delete ret.user_id;
+    res.json({data: ret});
+    log_user_action(userId, 'user asking for question in reading comprehension', JSON.stringify(ret));
+    return;
+  }
   
   try {
-    if(q === false || q.length < 4 || q.length > 512) throw "question invaild";
+    if(q === false || q.length < 4 || q.length > 512) throw new Error ("question invaild");
     //getting embedding of question
     const embedding_q = embedding_result_templete(q, await get_embedding(q));
     //record api usage
@@ -30,19 +62,29 @@ rc.post("/", async (req, res)=>{
     });
     //reading related embedding file base on hash,
     const embeddings = process_addressing_file(fileHash);
-    if(embeddings === false) throw "embeddings file not found";
+    if(embeddings === false) throw new Error("embeddings file not found");
     //getting the similarity and repack the asnwer related text to context
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
     //sending out the completion request to openai
     const completion = await chatCompletion(q, context, max_token_for_completion, level);
-    //if result is Legit
-    
     if(completion) {
+      //if result is Legit
       const {id, usage, choices} = completion;
-      console.log("in reading comprehension", completion);
-      //respond
+      // console.log("in reading comprehension", completion);
       completion['level'] = level;
-      res.send(JSON.stringify(completion));
+      //save to history
+      const rcHistory = await insertReadingComprehensionChatHistory(
+        req.session.userInfo.userId,
+        fileHash,
+        q,
+        level,
+        completion,
+        usage.total_tokens + embedding_q.usage.total_tokens
+      );
+      //remove user_id from result
+      delete rcHistory.user_id;
+      //return result
+      res.json({data: rcHistory});
       //record api usage
       insert_to_api_usage({
         user_name: req.sessionID, 
@@ -52,13 +94,15 @@ rc.post("/", async (req, res)=>{
         req_usage: usage.total_tokens,
         ip_address: req.socket.remoteAddress
       });
+      log_user_action(req.session.userInfo.userId, 'user asking for question in reading comprehension and goes to the openai', JSON.stringify(ret));
+
     }
     else{
-      throw new Error("completion = false");
+      throw new Error(completion.error.message);
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send(JSON.stringify({result:"failed", error}));
+    console.error(error);
+    res.status(500).json({error: error.message});
   }
 })
 ///helper section///////////////////////////////////////////////////
@@ -72,7 +116,7 @@ function process_addressing_file(filehash){
   try {
     return JSON.parse(fs.readFileSync(embedding_filename));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 }

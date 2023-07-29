@@ -51,6 +51,12 @@
   "You need to login first.": "请先登陆.",
   "In upload file": "上传文件中",
   "Library": "书库",
-  "Reading library": "读取书库"
+  "Reading library": "读取书库",
+  "processing PDF": "正在处理PDF",
+  "Loading file": "正在加载文件",
+  "Rendering page": "正在渲染页面",
+  "Send": "发送",
+  "get document": "读取文档",
+  "server error, try again later.": "服务器错误, 晚点再试."
 
 }

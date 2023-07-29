@@ -51,6 +51,11 @@
   "You need to login first.": "You need to login first.",
   "In upload file": "In upload file",
   "Library": "Library",
-  "Reading library": "Reading library"
-
+  "Reading library": "Reading library",
+  "processing PDF": "processing PDF",
+  "Loading file": "Loading file",
+  "Rendering page": "Rendering page",
+  "Send": "Send",
+  "get document": "get document",
+  "server error, try again later.": "server error, try again later."
 }

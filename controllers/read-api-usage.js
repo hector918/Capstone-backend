@@ -11,7 +11,6 @@ rau.get('/',async (req, res) => {
     const ret = await read_api_usage(start, limit);
     res.json(ret);
   } catch (error) {
-    // console.error(error);
     res.status(500).json({error: "Database error"});
   }
   

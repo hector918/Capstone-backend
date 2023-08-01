@@ -3,7 +3,6 @@ const timestamp = ()=> ({timestamp: new Date().toUTCString()});
 const insertReadingComprehensionChatHistory = async(user_id, filehash, q, level, result, usage) => {
   try {
     const ret = await db.one(`
-
     WITH history AS (
       INSERT INTO reading_comprehension_chat_history (q, result, timestamp, filehash, usage, level)
       VALUES ($[q], $[result], $[timestamp], $[filehash], $[usage], $[level])
@@ -69,10 +68,10 @@ const readReadingComprehensionHistory = async(filehash, q, level) => {
     const ret = await db.oneOrNone(`
     SELECT 
       rh.*, uh.user_id, uh.is_share, uh.timestamp
-    FROM reading_comprehension_chat_history as rh
-    LEFT JOIN user_to_comprehension_history as uh on
+    FROM reading_comprehension_chat_history AS rh
+    LEFT JOIN user_to_comprehension_history AS uh ON
       uh.comprehension_history_id = rh.id 
-    WHERE filehash = $[filehash] and q = $[q] and level = $[level]`, {filehash, q, level});
+    WHERE filehash = $[filehash] AND q = $[q] AND level = $[level]`, {filehash, q, level});
     return ret;
   } catch (error) {
     console.error(error);
@@ -101,8 +100,20 @@ const readReadingComprehensionHistory = async(filehash, q, level) => {
    */  
 }
 
+const toggleShareState = async(user_id, comprehension_history_id, is_share) => {
+  try {
+    const ret = await db.one(`UPDATE user_to_comprehension_history SET is_share = $[is_share] WHERE comprehension_history_id = $[comprehension_history_id] AND user_id = $[user_id] RETURNING *;
+    `, {user_id, comprehension_history_id, is_share});
+    return ret;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 module.exports = {
   insertReadingComprehensionChatHistory,
   addReadingComprehensionAnswerLinkToUser,
   readReadingComprehensionHistory,
+  toggleShareState
 }

@@ -57,6 +57,9 @@
   "Rendering page": "正在渲染页面",
   "Send": "发送",
   "get document": "读取文档",
-  "server error, try again later.": "服务器错误, 晚点再试."
+  "server error, try again later.": "服务器错误, 晚点再试.",
+  "question": "问题",
+  "anwser": "回答",
+  "either sign up/sign in or click on moving books to": "注册/登录或单击将图书移至"
 
 }

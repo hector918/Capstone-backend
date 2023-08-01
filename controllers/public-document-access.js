@@ -4,7 +4,7 @@ const {user_input_letter_and_numbers_only} = require('./str-filter');
 const docLocalPath = '../text-files';
 const path = require('path');
 const fs = require('fs');
-
+const {getAllHistoryFromFileHash} = require('../queries/documents');
 pda.get("/list", async (req, res) => {
   try {
     console.log("in pda list", req.headers.host);
@@ -73,7 +73,26 @@ pda.get("/:fileHash", async (req, res) => {
   }
 });
 
+pda.get('/chathistory/:filehash', async(req, res) => {
+  try {
+    const fileHash = user_input_letter_and_numbers_only(req.params.filehash);
+    //if filehash not correct, return empty array
+    if(fileHash === undefined || fileHash.length < 64){
+      res.json({data: []});
+      return;
+    }
+    const userId = req.session?.userInfo?.userId;
+    const ret = await getAllHistoryFromFileHash(userId, fileHash);
+    res.json({data: ret});
+  } catch (error) {
+    res.status(500).json({error: error.message});
+  }
+  
+});
 ////////////////////////////////////////
+function getDocumentChatHistory(fileHash){
+
+}
 function getMetaDataByHash(fileHash){
   const ret = {fileHash, meta: {}, history: {}};
   const file_path = path.join(__dirname, docLocalPath, fileHash);

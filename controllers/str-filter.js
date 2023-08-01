@@ -39,9 +39,8 @@ function accept_file_only(str){
 /////////////////////////////////////////
 function user_input_filter(str){
   //remove all not-stand symbol and quotation mark, for prevent injection
-  const regex = /[\p{P}"'\\\/$%@`~^><]/g;
+  const regex = new RegExp(/["'\\\/$%@`{}()~^><]/g);
   try {
-    // console.log(str)
     return str.replace(regex, "").trim();
   } catch (error) {
     console.log(error);

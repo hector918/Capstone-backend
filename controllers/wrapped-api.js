@@ -44,11 +44,11 @@ async function chatCompletion(question, context, max_token, level = undefined) {
       messages: [
         {
           role: "system",
-          content: "You are reading comprehension AI robot assistant, you use the same language as the question.",
+          content: "You are reading comprehension AI robot assistant, you use the same language as the question and return the output in a csv/Markdown format.",
         },
         {
           role: "user",
-          content: `Answer the question based on the context below and give it in detail, and if the question can't be answered based on the context, say \"I don't know\"\n${level_context}
+          content: `Answer the question based on the context below and give it in detail , and if the question can't be answered based on the context, say \"I don't know\"\n${level_context}
           \nContext: ${context}\n\n---\n\nQuestion: ${question}\nAnswer:`,
         },
       ],

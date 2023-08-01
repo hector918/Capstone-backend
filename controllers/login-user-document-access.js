@@ -44,7 +44,6 @@ luda.post('/addDocumentToUser', verifyUserLogin, async(req, res) => {
 })
 luda.patch('/updateReadingComprehensionShareState', verifyUserLogin, async(req, res) => {
   try {
-    console.log(req.body);
     const {comprehension_history_id, is_share} = req.body;
     const {userId} = req.session.userInfo;
     const ret = await rcQuery.toggleShareState(userId, comprehension_history_id, is_share);

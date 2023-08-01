@@ -101,8 +101,9 @@ const readReadingComprehensionHistory = async(filehash, q, level) => {
 }
 
 const toggleShareState = async(user_id, comprehension_history_id, is_share) => {
+  const user_id_expression = user_id ? "user_id = $[user_id]" : "user_id IS NULL";
   try {
-    const ret = await db.one(`UPDATE user_to_comprehension_history SET is_share = $[is_share] WHERE comprehension_history_id = $[comprehension_history_id] AND user_id = $[user_id] RETURNING *;
+    const ret = await db.one(`UPDATE user_to_comprehension_history SET is_share = $[is_share] WHERE comprehension_history_id = $[comprehension_history_id] AND ${user_id_expression} RETURNING *;
     `, {user_id, comprehension_history_id, is_share});
     return ret;
   } catch (error) {

@@ -1,13 +1,13 @@
 {
-  "":"",
-  "About":"关于",
-  "file not found":"未找到文件",
-  "Sign Up/ In":"注册/登入",
-  "sign in user id regex test failed.":"用户名不能通过正式表达式测试.",
-  "sign in password regex test failed.":"密码不能通过正式表达式测试.",
-  "Two password should be same.":"两次密码输入应该相同.",
-  "Add user failed.":"添加用户失败.",
-  "Login currently not available":"现时不能登入",
+  "": "",
+  "About": "关于",
+  "file not found": "未找到文件",
+  "Sign Up/ In": "注册/登入",
+  "sign in user id regex test failed.": "用户名不能通过正式表达式测试.",
+  "sign in password regex test failed.": "密码不能通过正式表达式测试.",
+  "Two password should be same.": "两次密码输入应该相同.",
+  "Add user failed.": "添加用户失败.",
+  "Login currently not available": "现时不能登入",
   "Register failed, contact Admin.": "注册失败，联系管理员。",
   "Successfully registered": "注册成功",
   "This message will automatically close.": "此消息会自动关闭",
@@ -60,6 +60,8 @@
   "server error, try again later.": "服务器错误, 晚点再试.",
   "question": "问题",
   "anwser": "回答",
-  "either sign up/sign in or click on moving books to": "注册/登录或单击将图书移至"
+  "either sign up/sign in or click on moving books to": "注册/登录或单击移动中的文档",
+  "Click again to open the Library.": "再次点击打开书库页",
+  "Recents": "最近使用"
 
 }

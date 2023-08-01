@@ -6,6 +6,7 @@ const {
   readReadingComprehensionHistory,
   addReadingComprehensionAnswerLinkToUser,
 } = require('../queries/reading-comprehension');
+const rcQuery = require('../queries/reading-comprehension');
 const {log_user_action} = require('../queries/user-control');
 
 const {user_input_filter} = require('./str-filter');
@@ -23,7 +24,6 @@ rc.post("/", async (req, res) => {
   
   //check user input
   q = user_input_filter(q);
-  console.log(q)
   const ret = await readReadingComprehensionHistory(fileHash, q, level);
   if(!ret){
     //read failed
@@ -83,6 +83,10 @@ rc.post("/", async (req, res) => {
         completion,
         usage.total_tokens + embedding_q.usage.total_tokens
       );
+      //if user not login, share this chat history
+      if(req.session?.userInfo?.userId === undefined){
+        rcQuery.toggleShareState(null, rcHistory.comprehension_history_id, true);
+      }
       //remove user_id from result
       delete rcHistory.user_id;
       //return result

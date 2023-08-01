@@ -57,5 +57,8 @@
   "Rendering page": "Rendering page",
   "Send": "Send",
   "get document": "get document",
-  "server error, try again later.": "server error, try again later."
+  "server error, try again later.": "server error, try again later.",
+  "question": "question",
+  "anwser": "anwser",
+  "either sign up/sign in or click on moving books to": "either sign up/sign in or click on moving books to"
 }

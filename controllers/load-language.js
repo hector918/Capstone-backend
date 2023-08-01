@@ -1,6 +1,6 @@
 const express = require("express");
 const ll = express.Router();
-const {accept_file_only, user_input_letter_and_numbers_only}  = require('./str-filter');
+const {accept_file_only}  = require('./str-filter');
 const fs = require("fs");
 const path = require('path');
 /////////////////////////////////

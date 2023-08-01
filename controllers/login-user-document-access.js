@@ -1,13 +1,12 @@
 const express = require("express");
 const luda = express.Router();
-const fs = require('fs');
-const path = require('path')
 
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const {verifyUserLogin} = require('./user-control');
 const {getDocumentsByUser, InsertDocumentLinkToUser} = require('../queries/documents');
 const {log_user_action} = require('../queries/user-control');
 const {getMetaDataByHash} = require('./public-document-access');
+const rcQuery = require('../queries/reading-comprehension');
 //////////////////////////////////////////////////
 luda.get('/library', verifyUserLogin, async(req, res) => {
   try {
@@ -38,6 +37,19 @@ luda.post('/addDocumentToUser', verifyUserLogin, async(req, res) => {
     ret.filehash = filehash;
     res.json({data: ret});
     log_user_action(userId, 'user linked a document', JSON.stringify(ret));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: error.message});
+  }
+})
+luda.patch('/updateReadingComprehensionShareState', verifyUserLogin, async(req, res) => {
+  try {
+    console.log(req.body);
+    const {comprehension_history_id, is_share} = req.body;
+    const {userId} = req.session.userInfo;
+    const ret = await rcQuery.toggleShareState(userId, comprehension_history_id, is_share);
+    if(ret === false) throw new Error('record not update.');
+    res.json({data: ret});
   } catch (error) {
     console.error(error);
     res.status(500).json({error: error.message});

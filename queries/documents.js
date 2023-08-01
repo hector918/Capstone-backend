@@ -61,10 +61,27 @@ const removeDocumentFromUser = async(user_id, document_id) => {
     return false;
   }
 }
+
+const getAllHistoryFromFileHash = async(user_id, filehash) => {
+  
+  try {
+    const [comprehension] = await db.multi(`
+    SELECT * FROM reading_comprehension_chat_history AS rh 
+    INNER JOIN user_to_comprehension_history AS uh 
+    ON uh.comprehension_history_id = rh.id AND (uh.is_share = true OR uh.user_id = $[user_id])
+    WHERE rh.filehash = $[filehash];
+    `, {user_id, filehash});
+    return {comprehension};
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
 //////////////////////////////////////////////
 module.exports = {
   insertDocument,
   removeDocumentFromUser,
   getDocumentsByUser,
-  InsertDocumentLinkToUser
+  InsertDocumentLinkToUser,
+  getAllHistoryFromFileHash
 }

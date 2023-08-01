@@ -20,8 +20,10 @@ rc.post("/", async (req, res) => {
   
   //reading body
   let {q, fileHash, level} = req.body;
+  
   //check user input
   q = user_input_filter(q);
+  console.log(q)
   const ret = await readReadingComprehensionHistory(fileHash, q, level);
   if(!ret){
     //read failed

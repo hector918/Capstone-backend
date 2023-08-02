@@ -38,6 +38,7 @@ rc.post("/", async (req, res) => {
       if(userId !== ret.user_id){
         //link to user
         addReadingComprehensionAnswerLinkToUser(userId, ret.id);
+        ret.is_share = true;
       }
     }else{
       //record found and no login, just return found record

@@ -63,15 +63,20 @@ const removeDocumentFromUser = async(user_id, document_id) => {
 }
 
 const getAllHistoryFromFileHash = async(user_id, filehash) => {
-  
+  ///get all history from here
   try {
-    const [comprehension] = await db.multi(`
+    const [comprehension, explaination] = await db.multi(`
     SELECT * FROM reading_comprehension_chat_history AS rh 
     INNER JOIN user_to_comprehension_history AS uh 
     ON uh.comprehension_history_id = rh.id AND (uh.is_share = true OR uh.user_id = $[user_id])
     WHERE rh.filehash = $[filehash];
+
+    SELECT * FROM text_explaination_chat_history AS te 
+    INNER JOIN user_to_text_explaination_history AS ue 
+    ON ue.text_explaination_history_id = te.id AND (ue.is_share = true OR ue.user_id = $[user_id])
+    WHERE te.filehash = $[filehash];
     `, {user_id, filehash});
-    return {comprehension};
+    return {comprehension, text: explaination};
   } catch (error) {
     console.error(error);
     return false;

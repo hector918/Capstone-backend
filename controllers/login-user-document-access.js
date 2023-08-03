@@ -7,6 +7,7 @@ const {getDocumentsByUser, InsertDocumentLinkToUser} = require('../queries/docum
 const {log_user_action} = require('../queries/user-control');
 const {getMetaDataByHash} = require('./public-document-access');
 const rcQuery = require('../queries/reading-comprehension');
+const raQuery = require('../queries/reading-assistance');
 //////////////////////////////////////////////////
 luda.get('/library', verifyUserLogin, async(req, res) => {
   try {
@@ -42,11 +43,25 @@ luda.post('/addDocumentToUser', verifyUserLogin, async(req, res) => {
     res.status(500).json({error: error.message});
   }
 })
+
 luda.patch('/updateReadingComprehensionShareState', verifyUserLogin, async(req, res) => {
   try {
     const {comprehension_history_id, is_share} = req.body;
     const {userId} = req.session.userInfo;
     const ret = await rcQuery.toggleShareState(userId, comprehension_history_id, is_share);
+    if(ret === false) throw new Error('record not update.');
+    res.json({data: ret});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: error.message});
+  }
+})
+
+luda.patch('/updateTextToExplainationShareState', verifyUserLogin, async(req, res) => {
+  try {
+    const {text_explaination_history_id, is_share} = req.body;
+    const {userId} = req.session.userInfo;
+    const ret = await raQuery.toggleShareState(userId, text_explaination_history_id, is_share);
     if(ret === false) throw new Error('record not update.');
     res.json({data: ret});
   } catch (error) {

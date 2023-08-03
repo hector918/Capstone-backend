@@ -24,13 +24,14 @@ rc.post("/", async (req, res) => {
   
   //check user input
   q = user_input_filter(q);
+  const {userId} = req.session.userInfo;
   const ret = await readReadingComprehensionHistory(fileHash, q, level);
   if(!ret){
     //read failed
     //no record then run the normal text embedding procedure
   }else{
     //record found
-    const {userId} = req.session.userInfo;
+    
     if(userId){
       //record found and login, Compare user id, if not the same add the document link under user
       

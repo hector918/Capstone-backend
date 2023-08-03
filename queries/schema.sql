@@ -75,3 +75,20 @@ CREATE TABLE reading_comprehension_chat_history (
     usage integer,
     level text
 );
+
+CREATE TABLE user_to_text_explaination_history (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id text,
+    text_explaination_history_id integer,
+    is_share boolean DEFAULT false,
+    timestamp timestamp without time zone
+);
+
+CREATE TABLE text_explaination_chat_history (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    q text,
+    result json,
+    timestamp timestamp without time zone,
+    filehash text,
+    usage integer
+);

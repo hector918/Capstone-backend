@@ -1,5 +1,6 @@
 const db = require("./db-config");
-const timestamp = ()=> ({timestamp: new Date().toUTCString()});
+const {timestamp, error_handle} = require('./db-general');
+////////////////////////////////////////////
 const insertReadingComprehensionChatHistory = async(user_id, filehash, q, level, result, usage) => {
   try {
     const ret = await db.one(`
@@ -13,10 +14,10 @@ const insertReadingComprehensionChatHistory = async(user_id, filehash, q, level,
       SELECT $[user_id], id, $[timestamp] FROM history RETURNING *
     )
     SELECT * FROM history, user_to_history;
-    `, {user_id, result, filehash, q, level, usage, timestamp: new Date().toUTCString()});
+    `, {user_id, result, filehash, q, level, usage, ...timestamp()});
     return ret;
   } catch (error) {
-    console.error(error);
+    error_handle(error);
     return false;
   }
 
@@ -58,7 +59,7 @@ const addReadingComprehensionAnswerLinkToUser = async(user_id, comprehension_his
     , body);
     return true;
   } catch (error) {
-    console.error(error);
+    error_handle(error);
     return false;
   }
 }
@@ -74,7 +75,7 @@ const readReadingComprehensionHistory = async(filehash, q, level) => {
     WHERE filehash = $[filehash] AND q = $[q] AND level = $[level]`, {filehash, q, level});
     return ret;
   } catch (error) {
-    console.error(error);
+    error_handle(error);
     return false;
   }
   /* exmaple successful output
@@ -107,7 +108,7 @@ const toggleShareState = async(user_id, comprehension_history_id, is_share) => {
     `, {user_id, comprehension_history_id, is_share});
     return ret;
   } catch (error) {
-    console.error(error);
+    error_handle(error);
     return false;
   }
 }

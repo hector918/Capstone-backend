@@ -76,6 +76,8 @@
   "It's base on a document,\nwhen user ask a question,\nthe answer are sourcing from the document only.": "基于文档的阅读理解，\n当你问问题，答案必定与文档相关.",
   "Reading Comprehension": "阅读理解",
   "or": "或者",
-  "go to next page": "转到下一页"
+  "go to next page": "转到下一页",
+  "after sign in enabling upload file.": "登陆后可以上传文件" 
+
 
 }

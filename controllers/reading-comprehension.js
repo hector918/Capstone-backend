@@ -1,6 +1,6 @@
 const express = require("express");
 const rc = express.Router();
-const {get_embedding, cosineDistance, embedding_result_templete, chatCompletion} = require('./wrapped-api');
+const {get_embedding, cosineDistance, embedding_result_templete, chatCompletionForRC} = require('./wrapped-api');
 const {
   insertReadingComprehensionChatHistory, 
   readReadingComprehensionHistory,
@@ -8,7 +8,7 @@ const {
 } = require('../queries/reading-comprehension');
 const rcQuery = require('../queries/reading-comprehension');
 const {log_user_action} = require('../queries/user-control');
-
+const {insert_to_api_usage} = require('../queries/api-usage');
 const {user_input_filter} = require('./str-filter');
 const [ max_token_for_embedding, max_token_for_completion ] = [5000, 2000];
 //web api Entrance/////////////////////////////////////////
@@ -16,22 +16,17 @@ rc.post("/", async (req, res) => {
   //read from history first, if question asked before, pull the record,  
   ////
   
-  //record api usage to db
-  const {insert_to_api_usage} = require('../queries/api-usage');
-  
   //reading body
   let {q, fileHash, level} = req.body;
-  
   //check user input
   q = user_input_filter(q);
-  const {userId} = req.session.userInfo;
+  let userId = null;
+  if(req?.session?.userInfo) userId = req.session.userInfo.userId;
+  // const {userId} = req?.session?.userInfo || null;
   const ret = await readReadingComprehensionHistory(fileHash, q, level);
-  if(!ret){
-    //read failed
-    //no record then run the normal text embedding procedure
-  }else{
+  
+  if(ret){
     //record found
-    
     if(userId){
       //record found and login, Compare user id, if not the same add the document link under user
       
@@ -48,9 +43,9 @@ rc.post("/", async (req, res) => {
     delete ret.user_id;
     res.json({data: ret});
     log_user_action(userId, 'user asking for question in reading comprehension', JSON.stringify(ret));
+    //sent ret already, end the process
     return;
   }
-  
   try {
     if(q === false || q.length < 4 || q.length > 512) throw new Error ("question invaild");
     //getting embedding of question
@@ -70,7 +65,7 @@ rc.post("/", async (req, res) => {
     //getting the similarity and repack the asnwer related text to context
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
     //sending out the completion request to openai
-    const completion = await chatCompletion(q, context, max_token_for_completion, level);
+    const completion = await chatCompletionForRC(q, context, max_token_for_completion, level);
     if(completion) {
       //if result is Legit
       const {id, usage, choices} = completion;
@@ -78,7 +73,7 @@ rc.post("/", async (req, res) => {
       completion['level'] = level;
       //save to history
       const rcHistory = await insertReadingComprehensionChatHistory(
-        req.session.userInfo.userId,
+        userId,
         fileHash,
         q,
         level,
@@ -86,7 +81,7 @@ rc.post("/", async (req, res) => {
         usage.total_tokens + embedding_q.usage.total_tokens
       );
       //if user not login, share this chat history
-      if(req.session?.userInfo?.userId === undefined){
+      if(userId){
         rcQuery.toggleShareState(null, rcHistory.comprehension_history_id, true);
       }
       //remove user_id from result
@@ -102,8 +97,7 @@ rc.post("/", async (req, res) => {
         req_usage: usage.total_tokens,
         ip_address: req.socket.remoteAddress
       });
-      log_user_action(req.session.userInfo.userId, 'user asking for question in reading comprehension and goes to the openai', JSON.stringify(ret));
-
+      log_user_action(userId, 'user asking for question in reading comprehension and goes to the openai', JSON.stringify(ret));
     }
     else{
       throw new Error(completion.error.message);

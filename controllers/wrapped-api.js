@@ -1,5 +1,6 @@
 const { Configuration, OpenAIApi } = require("openai");
 const { openai_api_key } = require("../token.js");
+// const { response } = require("../app.js");
 const openai = new OpenAIApi(new Configuration({ apiKey: openai_api_key }));
 //core function of openAI////////////////////////////////////////////////////////
 async function get_embedding(prompt) {
@@ -27,8 +28,23 @@ async function list_models() {
     return false;
   }
 }
-
-async function chatCompletion(question, context, max_token, level = undefined) {
+async function chatCompletion(model, messages, temperature){
+  try {
+    const response = openai.createChatCompletion({
+      model,
+      messages,
+      temperature,
+      //use stream
+      stream: true
+    }, { responseType: 'stream' });
+    return response;
+  } catch (error) {
+    return false;
+  }
+  
+  
+}
+async function chatCompletionForRC(question, context, max_token, level = undefined) {
   try {
     //level context
     const level_context = level_helper(level);
@@ -330,8 +346,9 @@ module.exports = {
   cosineDistance,
   embedding_result_templete,
   list_models,
-  chatCompletion,
+  chatCompletionForRC,
   get_an_image,
   explainText,
-  get_translation
+  get_translation,
+  chatCompletion
 };

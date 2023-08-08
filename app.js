@@ -26,6 +26,7 @@ app.use("/languages", require("./controllers/load-language").ll);
 app.use("/pda", require("./controllers/public-document-access").pda);
 app.use("/login", require("./controllers/user-control").uc);
 app.use("/luda", require("./controllers/login-user-document-access"));
+app.use("/cwo", require("./controllers/chatting-with-openai"));
 /////////////////////////////////////////////
 //for testing remove it later
 // app.use("/testing", require("./controllers/testing"));

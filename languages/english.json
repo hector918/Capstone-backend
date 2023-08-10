@@ -60,6 +60,8 @@
   "server error, try again later.": "server error, try again later.",
   "question": "question",
   "anwser": "anwser",
+  "Question": "Question",
+  "Anwser": "Anwser",
   "either sign up/sign in or click on moving books to": "either sign up/sign in or click on moving books to",
   "Click again to open the Library.": "Click again to open the Library.",
   "Recents": "Recents",
@@ -77,5 +79,7 @@
   "Reading Comprehension": "Reading Comprehension",
   "or": "or",
   "go to next page": "go to next page",
-  "after sign in enabling upload file.": "after sign in enabling upload file." 
+  "after sign in enabling upload file.": "after sign in enabling upload file.",
+  "type in you question in here.": "type in you question in here.",
+  "Elaborate on this": "Elaborate on this"
 }

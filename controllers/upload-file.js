@@ -9,7 +9,7 @@ const {insertDocument} = require('../queries/documents');
 const pdf_pages_limit = 1000;
 const processed_file_path = `${__dirname}/../text-files/`;
 //express operation enterance//////////////////////////////
-uf.post("/",  upload.array("files"),verifyUserLogin, async(req, res) => {
+uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
   try {
     if(req.files?.length > 0){
       //only process first file from req 

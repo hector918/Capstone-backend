@@ -92,3 +92,18 @@ CREATE TABLE text_explaination_chat_history (
     filehash text,
     usage integer
 );
+
+CREATE TABLE user_to_prompt (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id text,
+    prompt_id integer,
+    timestamp timestamp without time zone,
+    is_share boolean DEFAULT false
+);
+CREATE TABLE prompts (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    type text,
+    content text,
+    timestamp timestamp without time zone,
+    title text
+);

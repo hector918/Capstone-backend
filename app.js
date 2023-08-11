@@ -27,6 +27,7 @@ app.use("/pda", require("./controllers/public-document-access").pda);
 app.use("/login", require("./controllers/user-control").uc);
 app.use("/luda", require("./controllers/login-user-document-access"));
 app.use("/cwo", require("./controllers/chatting-with-openai"));
+app.use("/prompt", require("./controllers/prompt-library"));
 /////////////////////////////////////////////
 //for testing remove it later
 // app.use("/testing", require("./controllers/testing"));

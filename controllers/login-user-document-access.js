@@ -1,6 +1,5 @@
 const express = require("express");
 const luda = express.Router();
-
 const {user_input_letter_and_numbers_only} = require('./str-filter');
 const {verifyUserLogin} = require('./user-control');
 const {getDocumentsByUser, InsertDocumentLinkToUser} = require('../queries/documents');

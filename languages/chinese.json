@@ -81,5 +81,17 @@
   "go to next page": "转到下一页",
   "after sign in enabling upload file.": "登陆后可以上传文件",
   "type in you question in here.": " 在此输入你的问题",
-  "Elaborate on this": "解释所选文字"
+  "Elaborate on this": "解释所选文字",
+  "This row would'nt save, when this is empty.": "如果些行为空则不会保存",
+  "New Prompt": "新提示词",
+  "Create new Prompt": "创建新提示词",
+  "Type": "类型",
+  "Title": "主题",
+  "Prompt": "提示词",
+  "Add": "添加",
+  "Link": "连接",
+  "Reset": "重置",
+  "Cancel": "取消",
+  "Save": "保存",
+  "Filter": "过滤"
 }

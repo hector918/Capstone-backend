@@ -81,5 +81,17 @@
   "go to next page": "go to next page",
   "after sign in enabling upload file.": "after sign in enabling upload file.",
   "type in you question in here.": "type in you question in here.",
-  "Elaborate on this": "Elaborate on this"
+  "Elaborate on this": "Elaborate on this",
+  "This row would'nt save, when this is empty.": "This row would'nt save, when this is empty.",
+  "New Prompt": "New Prompt",
+  "Create new Prompt": "Create new Prompt",
+  "Type": "Type",
+  "Title": "Title",
+  "Prompt": "Prompt",
+  "Add": "Add",
+  "Link": "Link",
+  "Reset": "Reset",
+  "Cancel": "Cancel",
+  "Save": "Save",
+  "Filter": "Filter"
 }

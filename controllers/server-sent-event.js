@@ -19,6 +19,7 @@ function listen_to_sse(response, stream_handler) {
           stream_handler({data: {content, finish_reason}});
         } catch (error) {
           //on error
+          console.error(error);
           stream_handler(error);
           return;
         }

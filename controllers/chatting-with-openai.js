@@ -3,18 +3,22 @@ const cwo = express.Router();
 const { chatCompletion } = require('./wrapped-api');
 const { listen_to_sse, hosting_sse } = require('./server-sent-event');
 const { verifyUserLogin } = require('./user-control');
+const {log_user_action} = require('../queries/user-control');
 //////////////////////////////////////////
 cwo.post('/openai/SSE', verifyUserLogin, (req, res) => {
   try {
     const temperature = 1;
     var { messages, model } = req.body;
     model = model_str(model);
-    
+
     const response = chatCompletion('gpt-3.5-turbo-16k', messages, temperature);
     //handle openai sse 
     if (response) {
       const stream_handler = hosting_sse(req, res);
-      listen_to_sse(response, stream_handler);
+      listen_to_sse(response, stream_handler, () => {
+        //on end, log user action
+        log_user_action(req.session.userInfo.userId, 'user asking chatGpt question', JSON.stringify({model, question_length: JSON.stringify(messages).length}));
+      });
       //it end's here, the res will be handle by hosting_sse
     }
   } catch (error) {
@@ -29,11 +33,8 @@ function model_str(model) {
     case "02": return "gpt-4-0613";
     default: return "gpt-3.5-turbo-16k";//gpt-3.5-turbo-16k-0613
   }
-
 }
 module.exports = cwo;
-
-
 
 /**
  * 

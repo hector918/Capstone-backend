@@ -107,3 +107,9 @@ CREATE TABLE prompts (
     timestamp timestamp without time zone,
     title text
 );
+
+CREATE TABLE preset_content (
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name text UNIQUE,
+    content json DEFAULT '{}'::json
+);

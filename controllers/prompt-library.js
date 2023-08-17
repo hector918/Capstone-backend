@@ -6,6 +6,10 @@ const {verifyUserLogin} = require('./user-control');
 prompt.post('/new', verifyUserLogin, async(req, res) => {
   try {
     const {type, prompt, title, linkslist} = req.body;
+    if(type.length > 100) new Error("type value too long");
+    if(title.length > 100) new Error("title value too long");
+    if(prompt.length > 2000) new Error("prompt value too long");
+    if(JSON.stringify(linkslist).length > 2000) new Error("linkslist value too long");
     const {userId} = req.session.userInfo;
     const ret = await insertNewPrompt(userId, type, title, prompt, {links: linkslist});
     if(ret){

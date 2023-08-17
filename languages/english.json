@@ -88,10 +88,12 @@
   "Type": "Type",
   "Title": "Title",
   "Prompt": "Prompt",
-  "Add": "Add",
-  "Link": "Link",
+  "Add link": "Add link",
   "Reset": "Reset",
   "Cancel": "Cancel",
   "Save": "Save",
-  "Filter": "Filter"
+  "Filter": "Filter",
+  "New Chat": "New Chat",
+  "Clear chat history": "Clear chat history",
+  "no chatting history yet. add one?": "no chatting history yet. add one?"
 }

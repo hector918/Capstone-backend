@@ -6,7 +6,7 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const {verifyUserLogin} = require('./user-control');
 const {insertDocument} = require('../queries/documents');
-const pdf_pages_limit = 1000;
+const pdf_pages_limit = 2000;
 const processed_file_path = `${__dirname}/../text-files/`;
 //express operation enterance//////////////////////////////
 uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
@@ -16,8 +16,16 @@ uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
       let ret = await process_file(req.files[0].path, req.files[0]);
       //respond
       if(!ret.error){
-        res.json({...ret, message: "Successfully uploaded"});
-        insertDocument(req.session.userInfo.userId, ret.fileHash);
+        
+        const db_ret = await insertDocument(req.session.userInfo.userId, ret.fileHash);
+        res.json({
+          filehash: ret.fileHash,
+          ...db_ret,
+          type: ret.type, 
+          size: ret.size, 
+          message: "Successfully uploaded"
+        });
+        console.log("file uploaded", ret);
       }else{
         res.status(400).json({...ret});
       }
@@ -71,6 +79,7 @@ uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
         switch(meta_data.mimetype){
           case 'application/pdf':
             const pages = await extractPDFContent(pdf_file_path);
+            if(!pages) throw new Error(`make sure it's a text pdf and less than ${pdf_pages_limit} pages`);
             text = extractPureText(pages);
           break;
           default: // treat as text file
@@ -80,7 +89,6 @@ uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
         if(text === false) throw new Error("read text from file failed");
       } catch (error) {
         console.error(error);
-        //`make sure it's a text pdf and less than ${pdf_pages_limit} pages`
         //text are false remove file
         fs.unlinkSync(`${processed_file_path}${fileHash}/metadata.txt`);
         fs.unlinkSync(`${processed_file_path}${fileHash}/${fileHash}`);
@@ -94,7 +102,7 @@ uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
       const embedding = await Promise.all(text_arr.map(async el => {
         try {
           let data = await get_embedding(el);
-          console.log(data);
+          // console.log(data);
           total_usage += data.usage.total_tokens;
           return embedding_result_templete(el, data);
         } catch (error) {
@@ -108,7 +116,13 @@ uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
       fs.writeFileSync(`${processed_file_path}${fileHash}/${total_usage}.usage`, "");
       //save embedding to folder
       fs.writeFileSync(`${processed_file_path}${fileHash}/embedding-${fileHash}.json`, JSON.stringify(embedding));
-      return {result: "success", usage: total_usage, fileHash};
+      return {
+        result: "success", 
+        usage: total_usage, 
+        fileHash, 
+        type: meta_data.mimetype, 
+        size: meta_data.size
+      };
     }
   }
   function extractPureText(pages){
@@ -137,6 +151,8 @@ uf.post("/",  upload.array("files"), verifyUserLogin, async(req, res) => {
     const PDFJS = require('pdfjs-dist');
     const doc = await PDFJS.getDocument(file_path).promise;
     const ret = [];
+    // pdf pages more then pdf_pages_limit than return false
+    if(doc.numPages > pdf_pages_limit) return false;
     for (let p = 1; p <= doc.numPages; p++) {
       const page = await doc.getPage(p);
       ret.push(await parsePage(page));

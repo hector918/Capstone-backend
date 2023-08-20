@@ -30,7 +30,7 @@ app.use("/cwo", require("./controllers/chatting-with-openai"));
 app.use("/prompt", require("./controllers/prompt-library"));
 /////////////////////////////////////////////
 //for testing remove it later
-// app.use("/testing", require("./controllers/testing"));
+app.use("/testing", require("./controllers/testing"));
 /////////////////////////////////////////////
 
 app.get("*", (req, res) => {

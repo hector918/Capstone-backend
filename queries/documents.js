@@ -30,11 +30,15 @@ const insertDocument = async(user_id, filehash) => {
         ON CONFLICT (filehash)
         DO UPDATE SET filehash = EXCLUDED.filehash
         RETURNING id
+      ),
+      inserted_user_to_documents AS (
+        INSERT INTO user_to_documents (user_id, document_id, timestamp)
+        SELECT $[user_id], id, $[timestamp] FROM inserted_row RETURNING *
       )
-      INSERT INTO user_to_documents (user_id, document_id, timestamp)
-      SELECT $[user_id], id, $[timestamp] FROM inserted_row RETURNING *;
+      SELECT inserted_row.*, inserted_user_to_documents.* FROM inserted_row
+      CROSS JOIN inserted_user_to_documents;
     `,{user_id, filehash, timestamp: new Date().toUTCString()});
-    console.log(ret);
+    return ret;
   } catch (error) {
     console.error(error);
     

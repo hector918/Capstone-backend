@@ -5,21 +5,27 @@ const docLocalPath = '../text-files';
 const path = require('path');
 const fs = require('fs');
 const {getAllHistoryFromFileHash} = require('../queries/documents');
+const {getPresetContetntByName} = require('../queries/preset-content');
 pda.get("/list", async (req, res) => {
   try {
     console.log("in pda list", req.headers.host);
     //reading body
     // let {type} = req.body;
-    const file_path = path.join(__dirname, `${docLocalPath}`);
-    const {folderList} = getAllFiles(file_path);
-    const retList = [];
-    folderList.forEach(el => {
-      if (checkDocumentAvialable(el)){
-        let fileHash = el.split("/").pop();
-        retList.push(getMetaDataByHash(fileHash));
-      } 
-    })
-    res.json({"data": {popular: retList, favorite: retList, collection: retList, timestamp: new Date()}});
+
+    //read from file system
+    // const file_path = path.join(__dirname, `${docLocalPath}`);
+    // const {folderList} = getAllFiles(file_path);
+    // const retList = [];
+    // folderList.forEach(el => {
+    //   if (checkDocumentAvialable(el)){
+    //     let fileHash = el.split("/").pop();
+    //     retList.push(getMetaDataByHash(fileHash));
+    //   } 
+    // })
+    // res.json({"data": {popular: retList, favorite: retList, collection: retList, timestamp: new Date()}});
+    //
+    const ret = (await getPresetContetntByName("preset-moving-gallery"));
+    res.json({data: ret.content['preset-moving-gallery']});
   } catch (error) {
     console.log(error);
     res.status(500).json({error: req.trans(error.message)});

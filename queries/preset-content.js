@@ -1,5 +1,5 @@
 const db = require("./db-config");
-
+const buffer = {};
 const InsertPresetContent = async(name, content) => {
   try {
     const ret = await db.one(`
@@ -8,7 +8,6 @@ const InsertPresetContent = async(name, content) => {
       ON CONFLICT (name)
       DO UPDATE SET content = $[content] RETURNING *;
     `, {name, content});
-    console.log(ret);
     return ret;
   } catch (error) {
     console.error(error);
@@ -18,9 +17,10 @@ const InsertPresetContent = async(name, content) => {
 
 const getPresetContetntByName = async(name) => {
   try {
+    if(buffer[name]) return buffer[name];
     //if in the memory, then pull from memory, else pull from database
     const ret = await db.one(`SELECT * FROM preset_content WHERE name = $[name]`, {name});
-    console.log(ret);
+    buffer[name] = ret;
     return ret;
   } catch (error) {
     console.error(error);
@@ -29,8 +29,8 @@ const getPresetContetntByName = async(name) => {
 }
 const removePresetContentByName = async(name) => {
   try {
+    delete buffer[name];
     const ret = await db.oneOrNone(`DELETE FROM preset_content WHERE name = $[name]`, {name});
-    console.log(ret);
     return true;
   } catch (error) {
     console.error(error);

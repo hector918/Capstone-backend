@@ -1,6 +1,7 @@
 const express = require("express");
 const prompt = express.Router();
 const {readAllPromptByUser, insertNewPrompt, deletePrompt} = require("../queries/prompt-library");
+const {getPresetContetntByName} = require('../queries/preset-content');
 const {verifyUserLogin} = require('./user-control');
 ///////////////////////////////////
 prompt.post('/new', verifyUserLogin, async(req, res) => {
@@ -27,7 +28,8 @@ prompt.get("/", verifyUserLogin, async(req, res) => {
   try {
     const {userId} = req.session.userInfo;
     const ret = await readAllPromptByUser(userId);
-    res.json({data: ret});
+    const preset_prompt = (await getPresetContetntByName("preset-prompt")).content['preset-prompt'];
+    res.json({data: [...ret, ...preset_prompt]});
   } catch (error) {
     console.error(error);
     res.status(500).json({error: error.message});

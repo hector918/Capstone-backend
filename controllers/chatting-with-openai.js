@@ -7,27 +7,49 @@ const {log_user_action} = require('../queries/user-control');
 //////////////////////////////////////////
 cwo.post('/openai/SSE', verifyUserLogin, (req, res) => {
   try {
-    const temperature = 1;
-    var { messages, model } = req.body;
+    var { messages, model, temperature } = req.body;
+    temperature = temperature || 1;
+    // re-organize user input 
     model = model_str(model);
-
-    const response = chatCompletion('gpt-3.5-turbo-16k', messages, temperature);
-    //handle openai sse 
+    messages = filter_messages(messages);
+    if(messages === false){
+      throw new Error ("user input invalid");
+    }
+    //send it to api
+    const response = chatCompletion(model, messages, temperature);
+    //handle openai server sent event 
     if (response) {
       const stream_handler = hosting_sse(req, res);
       listen_to_sse(response, stream_handler, () => {
-        //on end, log user action
+        //on end, log user action, only log question's length not the content
         log_user_action(req.session.userInfo.userId, 'user asking chatGpt question', JSON.stringify({model, question_length: JSON.stringify(messages).length}));
       });
       //it end's here, the res will be handle by hosting_sse
     }
   } catch (error) {
     console.error(error.message);
-    res.status(500).send(error.message);
+    //this is Special for server sent event
+    res.status(500).write(JSON.stringify({error: error.message}));
+    res.end();
   }
   //openai response handling
 })
-
+function filter_messages(messages){
+  const template = {role: 10, content: 10000};
+  const ret = [];
+  for(let row of messages){
+    let filtered_row = {};
+    for(let key in template){
+      if(row[key].length <= template[key]){
+        filtered_row[key] = row[key];
+      }else{
+        return false;
+      }
+    }
+    ret.push(filtered_row);
+  }
+  return ret;
+}
 function model_str(model) {
   switch (model) {
     case "02": return "gpt-4-0613";

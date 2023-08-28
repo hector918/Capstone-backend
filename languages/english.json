@@ -97,5 +97,8 @@
   "Clear chat history": "Clear chat history",
   "no chatting history yet. add one?": "no chatting history yet. add one?",
   "no question history yet.": "no question history yet.",
-  "no document on display yet.": "no document on display yet."
+  "no document on display yet.": "no document on display yet.",
+  "Light": "Light",
+  "Dark": "Dark",
+  "Custom": "Custom"
 }

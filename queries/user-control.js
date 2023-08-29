@@ -41,6 +41,17 @@ const login = async (userForm) => {
   }
 }
 
+const update_user_profile = async(user_id, profile) => {
+  try {
+    console.log(profile)
+    const ret = await db.one(`UPDATE "user" SET profile_setting = $[profile] WHERE user_id = $[user_id] RETURNING *;`, {user_id, profile})
+    return ret;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
 const check_userID_available = async (user_id) => {
   try {
     const ret = await db.oneOrNone(`SELECT current_session FROM "user" WHERE "user_id" = $[user_id]`, {user_id});
@@ -60,4 +71,5 @@ module.exports = {
   user_password_hash, 
   login,
   log_user_action,
+  update_user_profile,
 };

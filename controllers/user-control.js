@@ -1,6 +1,13 @@
 const express = require("express");
 const uc = express.Router();
-const {check_userID_available, user_password_hash, create_an_user, login, log_user_action} = require('../queries/user-control');
+const {
+  check_userID_available, 
+  user_password_hash, 
+  create_an_user, 
+  login, 
+  log_user_action,
+  update_user_profile
+} = require('../queries/user-control');
 const {userIdRegex, passwordRegex, user_input_filter} = require('./str-filter');
 //////////////////////////////////////
 uc.get("/available", async(req, res) => {
@@ -77,6 +84,28 @@ uc.post("/login", async(req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({error: req.trans("Ooops..., contact Admin please.")});
+  }
+});
+
+uc.put('/update_user_setting', verifyUserLogin, async(req, res) => {
+  try {
+    let { setting } = req.body;
+    //checking json keys
+    if(req.session.userInfo.profile_setting === undefined){
+      req.session.userInfo.profile_setting['setting'] = {};
+    }
+    if(req.session.userInfo.profile_setting.setting === undefined) req.session.userInfo.profile_setting['setting'] = {};
+    //filling json keys
+    for(let key in setting){
+      req.session.userInfo.profile_setting['setting'][key] = setting[key];
+    }
+    //update to db
+    const ret = await update_user_profile(req.session.userInfo.userId, req.session.userInfo.profile_setting);
+    if(ret === false) throw new Error(`user ${req.session.userInfo.userId} profile can not update.`);
+    res.json({data: ret});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: error.message});
   }
 });
 

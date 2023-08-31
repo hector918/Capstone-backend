@@ -100,5 +100,7 @@
   "no document on display yet.": "未有文件被显示",
   "Light": "亮色",
   "Dark": "暗色",
-  "Custom": "定制"
+  "Custom": "定制",
+  "Sign in with Google": "使用 Google 登陆",
+  "Sign in with Microsoft": "使用 Microsoft 登陆"
 }

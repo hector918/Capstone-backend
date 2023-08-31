@@ -100,5 +100,8 @@
   "no document on display yet.": "no document on display yet.",
   "Light": "Light",
   "Dark": "Dark",
-  "Custom": "Custom"
+  "Custom": "Custom",
+  "Sign in with Google": "Sign in with Google",
+  "Sign in with Microsoft": "Sign in with Microsoft"
+
 }

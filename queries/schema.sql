@@ -1,8 +1,7 @@
-
 CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
     current_session character varying,
-    userid text,
+    user_id text UNIQUE,
     username text,
     password character varying,
     credit bigint DEFAULT 0,
@@ -11,7 +10,9 @@ CREATE TABLE "user" (
     availability boolean DEFAULT false,
     profile_setting json NOT NULL DEFAULT '{}'::json,
     temp_passcode text DEFAULT ''::text,
-    ip_address text
+    ip_address text,
+    email text,
+    third_party_login integer DEFAULT 0
 );
 
 CREATE TABLE session (

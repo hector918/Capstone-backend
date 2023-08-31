@@ -5,4 +5,4 @@
 .env
 token.js
 .DS_Store
-
+firebase-adminsdk.json

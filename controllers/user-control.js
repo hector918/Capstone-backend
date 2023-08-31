@@ -4,11 +4,13 @@ const {
   check_userID_available, 
   user_password_hash, 
   create_an_user, 
+  create_third_party_user,
   login, 
   log_user_action,
   update_user_profile
 } = require('../queries/user-control');
 const {userIdRegex, passwordRegex, user_input_filter} = require('./str-filter');
+const {verifyIdToken} = require("../firebase_");
 //////////////////////////////////////
 uc.get("/available", async(req, res) => {
   // console.log(req.session,req.sessionID,"a")
@@ -40,7 +42,7 @@ uc.post('/register', async(req, res) => {
     if(ret !== false){
       res.json({userId: ret.user_id});
       log_user_action(ret.user_id, "user register", JSON.stringify(ret));
-    }else throw req.trans("Add user failed.");
+    }else throw new Error (req.trans("Add user failed."));
   } catch (error) {
     console.error(error);
     res.status(500).json({error: error.message});
@@ -71,14 +73,12 @@ uc.post("/login", async(req, res) => {
       res.json({error: req.trans("User ID or password not matched.")})
     }else{
       //if login successed
-      const templete = {"username":"text",  "last_seen":"text", "credit": "text", "profile_setting": "json"};
+      const templete = login_returning_template();
       for(let x in templete) if(ret[x]) templete[x] = ret[x];
       res.json({data: templete});
       //add user id back to session
       templete['userId'] = ret['user_id'];
-
       req.session.userInfo = templete;
-
       req.session.save();
     }
   } catch (error) {
@@ -130,6 +130,50 @@ uc.post('/check_userID', async(req, res) => {
     res.status(500).json({error: error.message});
   }
 });
+
+uc.post('/user_third_party_login', async(req, res) => {
+  try {
+    let {idToken} = req.body;
+    const userInfo = await verifyIdToken(idToken);
+    if(userInfo.uid !== undefined){
+      const { user_id, email, name } = userInfo;
+      let newUserJson = { 
+        user_id: user_id, 
+        password: user_password_hash(generateUsername()), 
+        availability: true, 
+        current_session: req.sessionID,
+        username: name,
+        last_seen: new Date().toUTCString(),
+        ip_address: req.socket.remoteAddress,
+        email,
+        third_party_login: 1
+      }
+      const ret = await create_third_party_user(newUserJson);
+      
+      if(ret !== false){
+        if(ret.availability){
+          //success
+          const templete = login_returning_template();
+          for(let x in templete) if(ret[x]) templete[x] = ret[x];
+
+          res.json({data: templete});
+          //add user id back to session
+          templete['userId'] = ret['user_id'];
+          req.session.userInfo = templete;
+          req.session.save();
+        }else{
+          //user is not available
+          throw new Error ("user currently not available.")
+        }
+        log_user_action(ret.user_id, "third party user login", JSON.stringify(ret));
+      }else throw new Error ("register an new third party user failed.");
+    }else throw new Error("user info invalid");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error: error.message});
+  }
+});
+
 //////////////////////////////////////
 function verifyUserLogin(req, res, next){
   try {
@@ -150,6 +194,9 @@ function verifyUserLogin(req, res, next){
   }
 }
 ////////////////////////////////////////
+function login_returning_template(){
+  return {"username":"text",  "last_seen":"text", "credit": "text", "profile_setting": "json"};
+}
 function generateUsername() {
   var adjectives = ['happy', 'sad', 'funny', 'serious', 'clever', 'smart', 'kind', 'brave', 'shiny', 'silly', 'energetic', 'graceful', 'playful', 'witty', 'gentle', 'curious', 'charming', 'vibrant', 'daring', 'fantastic'];
   var nouns = ['penguin', 'elephant', 'tiger', 'koala', 'dolphin', 'lion', 'monkey', 'giraffe', 'unicorn', 'octopus', 'kangaroo', 'panda', 'zebra', 'parrot', 'dinosaur', 'jaguar', 'butterfly', 'peacock', 'otter', 'hedgehog'];

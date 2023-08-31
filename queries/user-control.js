@@ -29,10 +29,29 @@ const create_an_user = async (newUserJson) => {
 
 };
 
+const create_third_party_user = async (newUserJson) => {
+  const [col_name, val_name] = [[], []];
+  const templete = {"user_id":"text", "username":"text", "current_session":"text", "password":"text", "last_seen":"text", "availability":"bool", "ip_address":"text", "email":"text", "third_party_login":"int"};
+  for(let key in templete) if(newUserJson[key]){
+    col_name.push(key);
+    val_name.push(`$[${key}]`);
+  }
+  if(col_name.length === 0) return false;
+  try {
+    const ret = await db.one(`INSERT INTO "user" ("${col_name.join('", "')}") VALUES (${val_name.join(", ")}) ON CONFLICT (user_id) DO UPDATE SET last_seen = $[last_seen], ip_address = $[ip_address], current_session = $[current_session] RETURNING *`, newUserJson);
+    return ret;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+
+};
+
+
 const login = async (userForm) => {
   try {
     // const ret = await db.one(`SELECT * FROM public.user WHERE availability = 'true' AND userid = $[userid] and password = $[password]`, userForm);
-    const ret = await db.one(`UPDATE "user" SET last_seen = '${new Date().toUTCString()}' WHERE availability = 'true' AND user_id = $[user_id] and password = $[password] RETURNING *;`, userForm);
+    const ret = await db.one(`UPDATE "user" SET last_seen = '${new Date().toUTCString()}' WHERE availability = 'true' AND user_id = $[user_id] and password = $[password] and third_party_login = 0 RETURNING *;`, userForm);
     log_user_action(userForm.user_id, "user try to login", JSON.stringify(ret));
     return ret;
   } catch (error) {
@@ -67,6 +86,7 @@ const user_password_hash = (password) => {
 //////////////////////////////////////////////////
 module.exports = { 
   create_an_user, 
+  create_third_party_user,
   check_userID_available, 
   user_password_hash, 
   login,

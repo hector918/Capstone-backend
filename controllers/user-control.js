@@ -161,11 +161,12 @@ uc.post('/user_third_party_login', async(req, res) => {
           templete['userId'] = ret['user_id'];
           req.session.userInfo = templete;
           req.session.save();
+          log_user_action(ret.user_id, "third party user login", JSON.stringify(ret));
         }else{
           //user is not available
           throw new Error ("user currently not available.")
         }
-        log_user_action(ret.user_id, "third party user login", JSON.stringify(ret));
+        
       }else throw new Error ("register an new third party user failed.");
     }else throw new Error("user info invalid");
   } catch (error) {
@@ -200,11 +201,9 @@ function login_returning_template(){
 function generateUsername() {
   var adjectives = ['happy', 'sad', 'funny', 'serious', 'clever', 'smart', 'kind', 'brave', 'shiny', 'silly', 'energetic', 'graceful', 'playful', 'witty', 'gentle', 'curious', 'charming', 'vibrant', 'daring', 'fantastic'];
   var nouns = ['penguin', 'elephant', 'tiger', 'koala', 'dolphin', 'lion', 'monkey', 'giraffe', 'unicorn', 'octopus', 'kangaroo', 'panda', 'zebra', 'parrot', 'dinosaur', 'jaguar', 'butterfly', 'peacock', 'otter', 'hedgehog'];
-  
   var adjectiveIndex = Math.floor(Math.random() * adjectives.length);
   var nounIndex = Math.floor(Math.random() * nouns.length);
   var username = adjectives[adjectiveIndex] + ' ' + nouns[nounIndex];
-  
   return username;
 }
 //////////////////////////////////////

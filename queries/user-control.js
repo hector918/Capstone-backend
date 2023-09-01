@@ -18,7 +18,6 @@ const create_an_user = async (newUserJson) => {
     val_name.push(`$[${key}]`);
   }
   if(col_name.length === 0) return false;
-
   try {
     const ret = await db.one(`INSERT INTO "user" ("${col_name.join('", "')}") VALUES (${val_name.join(", ")}) RETURNING *`, newUserJson);
     return ret;
@@ -44,7 +43,6 @@ const create_third_party_user = async (newUserJson) => {
     console.error(error);
     return false;
   }
-
 };
 
 
@@ -62,7 +60,6 @@ const login = async (userForm) => {
 
 const update_user_profile = async(user_id, profile) => {
   try {
-    console.log(profile)
     const ret = await db.one(`UPDATE "user" SET profile_setting = $[profile] WHERE user_id = $[user_id] RETURNING *;`, {user_id, profile})
     return ret;
   } catch (error) {

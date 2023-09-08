@@ -170,7 +170,7 @@ async function get_an_image(prompt) {
 }
 
 // jeans work
-async function explainText(words, max_token = 2000) {
+async function explainText(words, language = 'english', max_token = 2000) {
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -180,8 +180,12 @@ async function explainText(words, max_token = 2000) {
       presence_penalty: 0,
       messages: [
         {
+          role: "system",
+          content: `Explain this word/sentence to me in ${language}, and your Explanation must be in ${language}`
+        },
+        {
           role: "user",
-          content: `Explain this word/sentence to me in english "${words}" \nAnswer:`,
+          content: `"${words}"`,
         },
       ],
     });

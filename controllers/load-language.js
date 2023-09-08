@@ -11,6 +11,10 @@ ll.get('/all_languages', async(req, res) => {
     availableList:[
       ["Chinese", "chinese.json"],
       ["English", "english.json"],
+      ["French", "french.json"],
+      ["Japanese", "japanese.json"],
+      ["Korean", "korean.json"],
+      ["Spanish", "spanish.json"],
     ],
     currentLanguage: req.session.language,
     translation: getLanguageFile(req.session.language)

@@ -70,13 +70,16 @@ ra.post("/image", verifyUserLogin, async (req, res) => {
 // jeans' work
 ra.post("/text", verifyUserLogin, async (req, res) => {
   try {
-    let {q, fileHash} = req.body;
+    let {q, fileHash, language} = req.body;
 
     //pre filter the user input
     question = user_input_filter(q);
+    console.log(q)
+    console.log(question)
+    console.log(language)
     if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";
     //call open ai api
-    const completion = await explainText(q);
+    const completion = await explainText(q, language);
     const {id, usage, choices} = completion;
     //record api usage
     insert_to_api_usage({

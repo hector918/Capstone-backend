@@ -29,40 +29,58 @@ testing.get('/3/'+passcode, async(req, res) => {
   try {
     const json = [
       {
-        type: "preset-working on resume",
-        content: "I want you to act as a skilled resume reviewer and evaluate my resume to help me achieve my career goals. Provide comprehensive feedback on the overall format, layout, and design of my resume to ensure it is visually appealing and professional. Analyze the content of each section, including the summary, work experience, education, and skills, and offer valuable suggestions to highlight my key achievements and contributions effectively. Additionally, assess the use of keywords and industry-specific terminology to tailor my resume for specific job opportunities.",
+        type: "Preset - Software development",
+        title: "code interpreter in any language",
+        json: {}, timestamp: "",
+        content: 'I want you to act like a interpreter/compiler. I will give you  code, and you will execute it. Do not provide any explanations. Do not respond with anything except the output of the code. and you need to detect the language I send you, The first code is: '
+      },
+      {
+        type: "Preset - Software development",
+        title: "Explain and debug",
+        json: {}, timestamp: "",
+        content: 'Your are an senior software engineer. I will give you code, and you will explain and debug it for me, here is the code: '
+      },
+      {
+        type: "Preset - Cover letter template from Tim on resume",
         title: "Resume Review",
+        content: `read my resume and use this template to build my cover letter, here is the template:
+        To whom it may concern,
+        My name is XNAMEX and I am submitting an application to fill the "XPOSITIONX" position. My current work and past experience within the Xpast experiences i.e. business, edu, adminX sectors allowed me to develop a diversified skill-set perfectly suited for this opportunity. I absolutely love the... BE SPECIFIC to Job description / company values HEREX. As a leader, I embody a sense of optimism as a self-starter within any junior engineering position. note why you are passionate about technologyX.
+        I bring a unique background tying together note your subject matter expert skills. My track for technology coupled with my work ethic embodies the following core values and characteristics that would be necessary for the role below:
+        Tim's Note: LOOK AT THE JOB DESCRIPTION AND IDENTIFY WHICH BULLETS YOU WANT TO NOTE! You will want to have 5 to 7 bullets already created and given the job description, pick 3 or 4.
+        *   Proficient Experience with XTECH STACKX:
+        *   Achieve Impact as a Continuous Learner:
+        *   Strategic Thinking and Data Driven:
+        *   Strategic Thinking and Data Driven:
+        *   Strategic Thinking and Data Driven:
+        Highlightable strengths I bring into the role include project management workflows, training capacity, and communication skills. Prior employment experiences have allowed me to Xlook at the responsibilities of the job description and note this section. Furthermore, my capstone experience allowed me to Xprovide context on your capstone and what you had done. Leverage your resume!.
+        In all my roles and my software engineering training, this has allowed me to learn quickly, adapt, and rise to the occasion of any task put in front of me. It is because of these characteristics and my deep passion within SECTOR TOPIC sector that I am looking for the position for the XPOSITIONX.
+        Thank you for your time and careful consideration of my application. I am excited by this opportunity. If you have any questions, please feel free to reach out at your convenience.
+        Sincerely,`,
         json: {}, timestamp: ""
       },
       {
-        type: "preset-working on resume",
-        content: "read my resume and i want to create four to five bullets to describe my strength, next message is my resume.",
+        type: "Preset - Working on resume",
+        title: "Resume Review",
+        content: "I want you to act as a skilled resume reviewer and evaluate my resume to help me achieve my career goals. Provide comprehensive feedback on the overall format, layout, and design of my resume to ensure it is visually appealing and professional. Analyze the content of each section, including the summary, work experience, education, and skills, and offer valuable suggestions to highlight my key achievements and contributions effectively. Additionally, assess the use of keywords and industry-specific terminology to tailor my resume for specific job opportunities.",
+        json: {}, timestamp: ""
+      },
+      {
+        type: "Preset - Working on resume",
         title: "Resume Summary",
+        content: "read my resume and i want to create four to five bullets to describe my strength, next message is my resume.",
         json: {}, timestamp: ""
       },
       {
-        type: "preset-career",
-        content: `Act as a salary negotiation mentor and guide me through the process of negotiating my compensation for a job offer. Begin by assessing my skills, qualifications, and experience to determine a competitive salary range for the position I am pursuing.
-        Help me craft a compelling case to showcase my value to the employer, highlighting my unique contributions and achievements. Provide tips on how to gather salary data and market research to support my negotiation arguments. next message is my info.`,
-        title: "Salary Negotiation",
-        json: {}, timestamp: ""
-      },
-      {
-        type: "preset-job searching",
-        content: "Read my resume, compose a professional cover letter demonstrating how my abilities align with the requirements for the [position] at [company]. Use the information below as a guide.",
-        title: "write cover letter-long",
-        json: {}, timestamp: ""
-      },
-      {
-        type: "preset-job searching",
+        type: "Preset - Job searching",
+        title:"Generate cover letter in short",
         content: "Draft a persuasive cover letter in 150 words or less highlighting my qualifications and enthusiasm for the [position] at [company] using my resume below.",
-        title:"write cover letter-short",
         json:{}, timestamp:""
       },
       {
-        type: "preset-general writing",
-        content: "Proofread my writing below. Fix grammar and spelling mistakes. And rephrase that improve the clarity of my writing",
+        type: "Preset - General writing",
         title: "rephrase writing",
+        content: "Proofread my writing below. Fix grammar and spelling mistakes. And rephrase that improve the clarity of my writing",
         json: {}, timestamp: ""
       },
 

@@ -36,11 +36,11 @@
   "Successed login.": "成功登陆.",
   "Profile": "我的资料",
   "Uses AI": "让人工智能",
-  "read the document": "阅读文件",
-  "and anwser": "并回答",
-  "questions.": "问题。",
+  "Read the document": "阅读文件",
+  "And answer": "并回答",
+  "Questions.": "问题。",
   "Discover the full story": "探索故事",
-  "let AI guide you through every page.": "AI帮你了解每一页。",
+  "Let AI guide you through every page.": "AI帮你了解每一页。",
   "Under construction": "正在建设中",
   "Start>": "开始>",
   "Click me to upload file...": "点我开始上传文件...",
@@ -107,5 +107,10 @@
   "Response Leaning to": "回复倾向于",
   "Factual": "事实",
   "Creative": "创意",
-  "Stoned": "迷幻"
+  "Stoned": "迷幻",
+  "Hover me for video walkthrough.": "将鼠标悬停在我上面以观看视频演示。",
+  "click the link below to open a new windows for video walkthrough host on youtube (english)": "点击下面的链接以在YouTube上打开新窗口观看视频演示（英语）。",
+  "chatGPT chat bot": "chatGPT聊天机器人",
+  "use AI to reading document \nand answer your question.": "使用AI来阅读文档\n并回答您的问题。",
+  "OpenAI GPT AI \nwith presetable prompt \nchat history will storage in local \n we don\\'t keep any data.": "OpenAI GPT AI\n带有可预设提示\n聊天历史将存储在本地\n我们不保留任何数据。"
 }

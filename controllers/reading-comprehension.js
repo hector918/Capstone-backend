@@ -20,6 +20,8 @@ rc.post("/", async (req, res) => {
   let {q, fileHash, level} = req.body;
   //check user input
   q = user_input_filter(q);
+  fileHash = user_input_filter(fileHash);
+  level = user_input_filter(level);
   let userId = null;
   if(req?.session?.userInfo) userId = req.session.userInfo.userId;
   // const {userId} = req?.session?.userInfo || null;

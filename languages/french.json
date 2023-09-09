@@ -107,5 +107,11 @@
   "Response Leaning to": "Réponse inclinant vers",
   "Factual": "Factual",
   "Creative": "Créatif",
-  "Stoned": "Stone"
+  "Stoned": "Stone",
+  "Hover me for video walkthrough.": "Survolez-moi pour une démonstration vidéo.",
+  "click the link below to open a new windows for video walkthrough host on youtube (english)": "cliquez sur le lien ci-dessous pour ouvrir une nouvelle fenêtre pour l'hébergement de la démonstration vidéo sur YouTube (en anglais)",
+  "chatGPT chat bot": "chatGPT chat bot",
+  "use AI to reading document \nand answer your question.": "utilisez l'IA pour lire le document\net répondre à votre question.",
+  "OpenAI GPT AI \nwith presetable prompt \nchat history will storage in local \n we don\\'t keep any data.": "OpenAI GPT AI\navec une invite prédéfinie\nl'historique de la conversation sera stocké localement\nnous ne conservons aucune donnée."
+
 }

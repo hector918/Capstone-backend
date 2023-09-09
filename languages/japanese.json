@@ -107,5 +107,10 @@
   "Response Leaning to": "回答が傾向",
   "Factual": "事実",
   "Creative": "クリエイティブ",
-  "Stoned": "ひとり言"
+  "Stoned": "ひとり言",
+  "Hover me for video walkthrough.": "ビデオガイドを表示するには、上にカーソルを合わせてください。",
+  "click the link below to open a new windows for video walkthrough host on youtube (english)": "下のリンクをクリックして、YouTubeでのビデオガイド用の新しいウィンドウを開きます（英語）。",
+  "chatGPT chat bot": "chatGPTチャットボット",
+  "use AI to reading document \nand answer your question.": "AIを使用して文書を読み、質問に答えます。",
+  "OpenAI GPT AI \nwith presetable prompt \nchat history will storage in local \n we don\\'t keep any data.": "事前設定可能なプロンプトを備えたOpenAI GPT AI\nチャット履歴はローカルに保存され、\nデータは保持しません。"
 }

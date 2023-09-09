@@ -74,9 +74,8 @@ ra.post("/text", verifyUserLogin, async (req, res) => {
 
     //pre filter the user input
     question = user_input_filter(q);
-    console.log(q)
-    console.log(question)
-    console.log(language)
+    fileHash = user_input_filter(fileHash);
+    language = user_input_filter(language.slice(20));
     if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";
     //call open ai api
     const completion = await explainText(q, language);

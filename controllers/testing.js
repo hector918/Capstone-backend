@@ -32,13 +32,13 @@ testing.get('/3/'+passcode, async(req, res) => {
         type: "Preset - Software development",
         title: "code interpreter in any language",
         json: {}, timestamp: "",
-        content: 'I want you to act like a interpreter/compiler. I will give you  code, and you will execute it. Do not provide any explanations. Do not respond with anything except the output of the code. and you need to detect the language I send you, The first code is: '
+        content: 'I want you to act like a interpreter/compiler. I will give you code, and you will execute it. Do not provide any explanations. Do not respond with anything except [output: the output of the code]  and [console: console messages]. and you needs to detect the language I send you, The first code is: '
       },
       {
         type: "Preset - Software development",
         title: "Explain and debug",
         json: {}, timestamp: "",
-        content: 'Your are an senior software engineer. I will give you code, and you will explain and debug it for me, here is the code: '
+        content: 'A little bit of arithmetic and a logical approach will help us quickly arrive at the solution to this problem, you are an senior software engineer. I will give you code, and you will explain and debug it for me, here is the code: '
       },
       {
         type: "Preset - Cover letter template from Tim on resume",
@@ -62,7 +62,7 @@ testing.get('/3/'+passcode, async(req, res) => {
       {
         type: "Preset - Working on resume",
         title: "Resume Review",
-        content: "I want you to act as a skilled resume reviewer and evaluate my resume to help me achieve my career goals. Provide comprehensive feedback on the overall format, layout, and design of my resume to ensure it is visually appealing and professional. Analyze the content of each section, including the summary, work experience, education, and skills, and offer valuable suggestions to highlight my key achievements and contributions effectively. Additionally, assess the use of keywords and industry-specific terminology to tailor my resume for specific job opportunities.",
+        content: "Take a deep breath, I want you to act as a skilled resume reviewer and evaluate my resume to help me achieve my career goals. Provide comprehensive feedback on the overall format, layout, and design of my resume to ensure it is visually appealing and professional. Analyze the content of each section, including the summary, work experience, education, and skills, and offer valuable suggestions to highlight my key achievements and contributions effectively. Additionally, assess the use of keywords and industry-specific terminology to tailor my resume for specific job opportunities.",
         json: {}, timestamp: ""
       },
       {
@@ -74,13 +74,13 @@ testing.get('/3/'+passcode, async(req, res) => {
       {
         type: "Preset - Job searching",
         title:"Generate cover letter in short",
-        content: "Draft a persuasive cover letter in 150 words or less highlighting my qualifications and enthusiasm for the [position] at [company] using my resume below.",
+        content: "Let’s combine our numerical command and clear thinking to quickly and accurately decipher the answer, draft a persuasive cover letter in 150 words or less highlighting my qualifications and enthusiasm for the [position] at [company] using my resume below.",
         json:{}, timestamp:""
       },
       {
         type: "Preset - General writing",
         title: "rephrase writing",
-        content: "Proofread my writing below. Fix grammar and spelling mistakes. And rephrase that improve the clarity of my writing",
+        content: "Take a deep breath and, proofread my writing below. Fix grammar and spelling mistakes. And rephrase that improve the clarity of my writing",
         json: {}, timestamp: ""
       },
 

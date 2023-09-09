@@ -12,6 +12,7 @@ ra.post("/translation", verifyUserLogin, async (req, res) => {
     let {q, language, level} = req.body;
     //pre filter the user input
     question = user_input_filter(q);
+    level = user_input_filter(level);
     //stop when question invaild
     if(question === false || question.length < 4 || question.length > 10000) throw "invaild question";
     //get completion
@@ -75,7 +76,7 @@ ra.post("/text", verifyUserLogin, async (req, res) => {
     //pre filter the user input
     question = user_input_filter(q);
     fileHash = user_input_filter(fileHash);
-    language = user_input_filter(language.slice(20));
+    language = user_input_filter(language.slice(0, 20));
     if(question === false || question.length < 4 || question.length > 1000) throw "question invaild";
     //call open ai api
     const completion = await explainText(q, language);

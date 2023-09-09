@@ -8,7 +8,7 @@ const {log_user_action} = require('../queries/user-control');
 cwo.post('/openai/SSE', verifyUserLogin, (req, res) => {
   try {
     var { messages, model, temperature } = req.body;
-    temperature = temperature || 1;
+    temperature = Number(temperature) || 1;
     // re-organize user input 
     model = model_str(model);
     messages = filter_messages(messages);

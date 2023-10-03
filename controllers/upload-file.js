@@ -1,9 +1,11 @@
 const express = require("express");
 const uf = express.Router();
 const crypto = require('crypto');
+const path = require('path');
 const fs = require('fs');
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload_file_path = "uploads/";
+const upload = multer({ dest: upload_file_path });
 const { verifyUserLogin } = require('./user-control');
 const { insertDocument } = require('../queries/documents');
 const { accept_file_only } = require('./str-filter');
@@ -14,7 +16,7 @@ uf.post("/", upload.array("files"), verifyUserLogin, async (req, res) => {
   try {
     if (req.files?.length > 0) {
       //only process first file from req 
-      let ret = await process_file(accept_file_only(req.files[0].path), req.files[0]);
+      let ret = await process_file(req.files[0].path, req.files[0]);
       //respond
       if (!ret.error) {
 
@@ -49,28 +51,28 @@ uf.post("/", upload.array("files"), verifyUserLogin, async (req, res) => {
   } catch (error) {
     res.status(500).json({ "error": error.message });
   }
-
   //////////////////////////////////////////////////////
   async function process_file(filepath, meta_data) {
     // //remove old man and the sea
     // removeOldman()
     //////////////////////////////
     // console.log("in process file");
-    filepath = accept_file_only(filepath);
-    const filecontent = fs.readFileSync(`${__dirname}/../${filepath}`);
+    const filename = accept_file_only(path.basename(filepath));
+    const tmp_file_path = `${__dirname}/${upload_file_path}${filename}`;
+    const filecontent = fs.readFileSync(tmp_file_path);
     //create file hash
     const fileHash = crypto.createHash('sha256').update(filecontent).digest('hex');
 
     if (fs.existsSync(`${processed_file_path}${fileHash}/${fileHash}`)) {
       //if exists
-      fs.unlinkSync(filepath);
+      fs.unlinkSync(tmp_file_path);
       return { result: "success", fileHash };
     } else {
       //if not exists
       //making folder
       if (!fs.existsSync(`${processed_file_path}${fileHash}`)) fs.mkdirSync(`${processed_file_path}${fileHash}`);
       //move the file from upload to the folder named by filehash
-      fs.renameSync(filepath, `${processed_file_path}${fileHash}/${fileHash}`);
+      fs.renameSync(tmp_file_path, `${processed_file_path}${fileHash}/${fileHash}`);
       //save the metadata 
       fs.writeFileSync(`${processed_file_path}${fileHash}/metadata.txt`, JSON.stringify(meta_data));
       let text = false;

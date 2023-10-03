@@ -32,7 +32,7 @@ ll.get('/all_languages', async (req, res) => {
 
 ll.get('/change_language/:languageFile', async (req, res) => {
   try {
-    const userInputLanguage = checkLanguageFile(accept_file_only(req.params.languageFile));
+    const userInputLanguage = checkLanguageFile(accept_file_only(req.params.languageFile.replace(/\//g, '\\\\')));
     //if language json exists change language
     if (fs.existsSync(`${languageFilesPath}/${userInputLanguage}`)) {
       req.session.language = userInputLanguage;

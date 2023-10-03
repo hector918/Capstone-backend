@@ -253,6 +253,7 @@ function save_image_to_local(prompt, openai_dalle_response) {
   function save_img_to_file(url_to_image, fileHash, metaData) {
     const https = require('https');
     const fs = require('fs');
+    if (!url_to_image.match('https://oaidalleapiprodscus.blob.core.windows.net')) return false;
     const parsedUrl = new URL(url_to_image);
     parsedUrl.hostname = "oaidalleapiprodscus.blob.core.windows.net";
 

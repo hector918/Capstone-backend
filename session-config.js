@@ -9,7 +9,7 @@ const sessionStore = new PostgresqlStore({
 function applySession(app) {
   //init session
   app.use(session({
-    secret: process.env.SESSION_SECRET || 'sessionsecret10704202343059',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {

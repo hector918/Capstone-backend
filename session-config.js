@@ -3,20 +3,20 @@ const session = require("express-session");
 const genFunc = require("connect-pg-simple");
 const PostgresqlStore = genFunc(session);
 const sessionStore = new PostgresqlStore({
-  conString : `postgres://${process.env.PG_USER}:${process.env.PG_PASSWORD}@${process.env.PG_HOST}:${process.env.PG_PORT}/${process.env.PG_DB}`
+  conString: `postgres://${process.env.PG_USER}:${process.env.PG_PASSWORD}@${process.env.PG_HOST}:${process.env.PG_PORT}/${process.env.PG_DB}`
 });
 
-function applySession (app){
+function applySession(app) {
   //init session
   app.use(session({
-    secret: 'sessionsecret10704202343059',
+    secret: process.env.SESSION_SECRET || 'sessionsecret10704202343059',
     resave: false,
     saveUninitialized: true,
-    cookie: { 
+    cookie: {
       maxAge: 86400000 * 1, // 86400000 = 1 day
       secure: true,
-      sameSite: "none" ,
-    }, 
+      sameSite: "none",
+    },
     store: sessionStore
   }));
 

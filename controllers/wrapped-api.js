@@ -28,7 +28,7 @@ async function list_models() {
     return false;
   }
 }
-async function chatCompletion(model, messages, temperature){
+async function chatCompletion(model, messages, temperature) {
   try {
     const response = openai.createChatCompletion({
       model,
@@ -41,8 +41,8 @@ async function chatCompletion(model, messages, temperature){
   } catch (error) {
     return false;
   }
-  
-  
+
+
 }
 async function chatCompletionForRC(question, context, max_token, level = undefined) {
   try {
@@ -164,7 +164,7 @@ async function get_an_image(prompt) {
     console.log(error.response?.data?.error);
     return false;
   }
-  function prompt_helper(input){
+  function prompt_helper(input) {
     return `${input}, in the real world`
   }
 }
@@ -212,7 +212,7 @@ async function explainText(words, language = 'english', max_token = 2000) {
 }
 
 //helper below////////////////////////////////////////////
-function save_image_to_local(prompt, openai_dalle_response){
+function save_image_to_local(prompt, openai_dalle_response) {
   /**
    * success response
    *  {
@@ -233,44 +233,77 @@ function save_image_to_local(prompt, openai_dalle_response){
   }
   */
   //
-  if(openai_dalle_response.created){
+  if (openai_dalle_response.created) {
     //success
 
     const alt_img_hash = createSHA256Hash(prompt + openai_dalle_response['data'][0]['url']);
-    
-    const metaData = {...openai_dalle_response, prompt, timestamp: Date()};
+
+    const metaData = { ...openai_dalle_response, prompt, timestamp: Date() };
 
     save_img_to_file(openai_dalle_response['data'][0]['url'], alt_img_hash, metaData);
 
-    openai_dalle_response.data.push({url: alt_img_hash});
-  }else{
+    openai_dalle_response.data.push({ url: alt_img_hash });
+  } else {
     //failed
     openai_dalle_response['error'] = "true";
   }
   console.log(openai_dalle_response);
   return openai_dalle_response;
   ////////////////////////////////////////
-  function save_img_to_file(url, fileHash, metaData){
-    const http = require('https');
+  function save_img_to_file(url_to_image, fileHash, metaData) {
+    const https = require('https');
     const fs = require('fs');
+    const parsedUrl = new URL(url_to_image);
+    parsedUrl.hostname = "oaidalleapiprodscus.blob.core.windows.net";
+
     const path_prefix = `${__dirname}/../img-files/`;
     const destinationPath = path_prefix + fileHash;
     const file = fs.createWriteStream(destinationPath);
     //download image from remote
-    http.get(url, function(response) {
+    https.get(parsedUrl.toString(), function (response) {
       response.pipe(file);
-      file.on('finish', function() {
-        file.close(function() {
+      file.on('finish', function () {
+        file.close(function () {
           //save file
-          fs.writeFile(destinationPath + ".metadata", JSON.stringify(metaData), ()=>{});
+          fs.writeFile(destinationPath + ".metadata", JSON.stringify(metaData), () => { });
         });
       });
-    }).on('error', function(err) {
+    }).on('error', function (err) {
       //remove local image if error occur
-      fs.unlink(destinationPath, function() {
+      fs.unlink(destinationPath, function () {
         console.error('Error while downloading the file:', err.message);
       });
     });
+    /**
+     * example URL object{
+  href: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-W3qTiYheuLe3KAAPdSI9HPnU/user-3AejdC7ysjGYoB9y8AWhpnCD/img-cGhY2j42IaobYES60DVhpV1z.png?st=2023-10-03T13%3A48%3A21Z&se=2023-10-03T15%3A48%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-10-03T12%3A19%3A52Z&ske=2023-10-04T12%3A19%3A52Z&sks=b&skv=2021-08-06&sig=3kuKE5oONmDcq0%2BlJ6FNoAlp4wO90Utx7l44VASGM0c%3D',
+  origin: 'https://oaidalleapiprodscus.blob.core.windows.net',
+  protocol: 'https:',
+  username: '',
+  password: '',
+  host: 'oaidalleapiprodscus.blob.core.windows.net',
+  hostname: 'oaidalleapiprodscus.blob.core.windows.net',
+  port: '',
+  pathname: '/private/org-W3qTiYheuLe3KAAPdSI9HPnU/user-3AejdC7ysjGYoB9y8AWhpnCD/img-cGhY2j42IaobYES60DVhpV1z.png',
+  search: '?st=2023-10-03T13%3A48%3A21Z&se=2023-10-03T15%3A48%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-10-03T12%3A19%3A52Z&ske=2023-10-04T12%3A19%3A52Z&sks=b&skv=2021-08-06&sig=3kuKE5oONmDcq0%2BlJ6FNoAlp4wO90Utx7l44VASGM0c%3D',
+  searchParams: URLSearchParams {
+    'st' => '2023-10-03T13:48:21Z',
+    'se' => '2023-10-03T15:48:21Z',
+    'sp' => 'r',
+    'sv' => '2021-08-06',
+    'sr' => 'b',
+    'rscd' => 'inline',
+    'rsct' => 'image/png',
+    'skoid' => '6aaadede-4fb3-4698-a8f6-684d7786b067',
+    'sktid' => 'a48cca56-e6da-484e-a814-9c849652bcb3',
+    'skt' => '2023-10-03T12:19:52Z',
+    'ske' => '2023-10-04T12:19:52Z',
+    'sks' => 'b',
+    'skv' => '2021-08-06',
+    'sig' => '3kuKE5oONmDcq0+lJ6FNoAlp4wO90Utx7l44VASGM0c=' },
+  hash: ''
+}
+     */
   }
   function createSHA256Hash(data) {
     const crypto = require('crypto');
@@ -317,9 +350,9 @@ function cosineDistance(u, v, w = null) {
   // Compute the cosine distance
   return dotProduct / (Math.sqrt(magnitudeU) * Math.sqrt(magnitudeV));
 }
-function level_helper(level){
+function level_helper(level) {
   //get level prompt from level parameter
-  switch(level){
+  switch (level) {
     case "1":
       return "use simplified Elementary level of words to answer";
     case "3":

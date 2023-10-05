@@ -11,6 +11,8 @@ const { insertDocument } = require('../queries/documents');
 const { accept_file_only } = require('./str-filter');
 const pdf_pages_limit = 2000;
 const processed_file_path = `${__dirname}/../text-files/`;
+const { readFileSyncWithLimit } = require('../general_');
+
 //express operation enterance//////////////////////////////
 uf.post("/", upload.array("files"), verifyUserLogin, async (req, res) => {
   try {
@@ -59,7 +61,7 @@ uf.post("/", upload.array("files"), verifyUserLogin, async (req, res) => {
     // console.log("in process file");
     const filename = accept_file_only(path.basename(filepath));
     const tmp_file_path = `${__dirname}/${upload_file_path}${filename}`;
-    const filecontent = fs.readFileSync(tmp_file_path);
+    const filecontent = readFileSyncWithLimit(tmp_file_path);
     //create file hash
     const fileHash = crypto.createHash('sha256').update(filecontent).digest('hex');
 

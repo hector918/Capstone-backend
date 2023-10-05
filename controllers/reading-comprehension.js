@@ -11,6 +11,8 @@ const { log_user_action } = require('../queries/user-control');
 const { insert_to_api_usage } = require('../queries/api-usage');
 const { user_input_filter } = require('./str-filter');
 const [max_token_for_embedding, max_token_for_completion] = [5000, 2000];
+const { readFileSyncWithLimit } = require('../general_');
+
 //web api Entrance/////////////////////////////////////////
 rc.post("/", async (req, res) => {
   //read from history first, if question asked before, pull the record,  
@@ -122,7 +124,7 @@ async function process_addressing_file(filehash) {
     const { size, isFile } = fs.fstatSync(embedding_filename);
     if (!isFile) return false;
     if (size > 100_000_000) return false;
-    return JSON.parse(fs.readFileSync(embedding_filename));
+    return JSON.parse(readFileSyncWithLimit(embedding_filename));
   } catch (error) {
     console.error(error);
     return false;

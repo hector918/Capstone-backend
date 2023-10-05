@@ -1,15 +1,17 @@
 const express = require("express");
 const df = express.Router();
 const fs = require('fs');
-const {user_input_letter_and_numbers_only} = require('./str-filter');
+const { user_input_letter_and_numbers_only } = require('./str-filter');
 const path = require('path');
+const { readFileSyncWithLimit, responseSendFile } = require('../general_');
+
 //download client side localstorage init data
 df.get("/download_localstorage_init", async (req, res) => {
   //check file exists and send it
   const file_path = `./client_localstorage_init.txt`;
-  if(fs.existsSync(file_path)){
-    res.send(fs.readFileSync(file_path));
-  }else{
+  if (fs.existsSync(file_path)) {
+    res.send(readFileSyncWithLimit(file_path));
+  } else {
     res.status.json({});
   }
 });
@@ -21,9 +23,9 @@ df.get("/pdf_thumbnail/:fileHash", async (req, res) => {
   const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, 'cover.1.png');
   try {
     //check file exists and send it
-    if(fileHash !== false && fs.existsSync(file_path)){
-      res.sendFile(file_path);
-    }else throw("file not found");
+    if (fileHash !== false && fs.existsSync(file_path)) {
+      responseSendFile(res, file_path);
+    } else throw ("file not found");
   } catch (error) {
     res.status(404).send("file not found");
   }
@@ -36,21 +38,21 @@ df.get("/meta/:fileHash", async (req, res) => {
   const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, 'metadata.txt');
   try {
     //check file exists and change key name of the json object
-    if(fileHash !== false && fs.existsSync(file_path)){
-      const json = JSON.parse(fs.readFileSync(file_path));
+    if (fileHash !== false && fs.existsSync(file_path)) {
+      const json = JSON.parse(readFileSyncWithLimit(file_path));
       const field_exchange = {
-        "originalname" : "name",
-        "mimetype" : "type",
-        "size" : "size"
+        "originalname": "name",
+        "mimetype": "type",
+        "size": "size"
       }
       let ret = {};
-      for(let x in field_exchange) ret[field_exchange[x]] = json[x];
+      for (let x in field_exchange) ret[field_exchange[x]] = json[x];
       res.json(ret);
-    }else{
-      throw("file not found");
+    } else {
+      throw ("file not found");
     }
   } catch (error) {
-    res.status(404).json({error: req.trans("file not found")});
+    res.status(404).json({ error: req.trans("file not found") });
   }
   /*
     lastModified:  1680656982986
@@ -69,9 +71,9 @@ df.get("/image/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
   // combine path
   const file_path = path.join(__dirname, `/../img-files/${fileHash}`);
-  if(fileHash !== false && fs.existsSync(file_path)){
-    res.sendFile(file_path);
-  }else{
+  if (fileHash !== false && fs.existsSync(file_path)) {
+    responseSendFile(res, file_path);
+  } else {
     res.status(404).send("file not found");
   }
 })
@@ -81,9 +83,9 @@ df.get("/:fileHash", async (req, res) => {
   const fileHash = user_input_letter_and_numbers_only(req.params.fileHash);
   // const processed_file_path = `${__dirname}/../text-files/`;
   const file_path = path.join(__dirname, `/../text-files/${fileHash}/`, fileHash);
-  if(fileHash !== false && fs.existsSync(file_path)){
-    res.sendFile(file_path);
-  }else{
+  if (fileHash !== false && fs.existsSync(file_path)) {
+    responseSendFile(res, file_path);
+  } else {
     res.status(404).send("file not found");
   }
 });

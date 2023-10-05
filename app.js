@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const fs = require('fs');
-
+const { responseSendFile } = require('./general_');
 app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -36,7 +36,7 @@ app.use("/testing", require("./controllers/testing"));
 app.get("*", (req, res) => {
   const file_path = `${__dirname}/public/index.html`;
   if (fs.existsSync(file_path)) {
-    res.sendFile(file_path);
+    responseSendFile(res, file_path);
   } else res.status(404).send(`<h3>${req.trans('file not found.')}</h3><p style='position: absolute;bottom: 0;right: 0;margin-right: 3%'> by [Binary mind]. 2023 </p>`);
 });
 

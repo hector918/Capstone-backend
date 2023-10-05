@@ -1,6 +1,8 @@
 const express = require("express");
 const ll = express.Router();
 const { accept_file_only } = require('./str-filter');
+const { readFileSyncWithLimit, responseSendFile } = require('../general_');
+
 const fs = require("fs");
 const path = require('path');
 /////////////////////////////////
@@ -36,7 +38,7 @@ ll.get('/change_language/:languageFile', async (req, res) => {
     //if language json exists change language
     if (fs.existsSync(`${languageFilesPath}/${userInputLanguage}`)) {
       req.session.language = userInputLanguage;
-      res.sendFile(`${languageFilesPath}/${userInputLanguage}`);
+      responseSendFile(res, `${languageFilesPath}/${userInputLanguage}`);
     } else {
       res.json({ result: false });
     }
@@ -83,11 +85,11 @@ function getLanguageFile(language) {
   const filePath = `${languageFilesPath}/${language}`;
   try {
     if (fs.existsSync(filePath)) {
-      return JSON.parse(fs.readFileSync(filePath));
+      return JSON.parse(readFileSyncWithLimit(filePath));
     } throw `language ${language} file not found.`;
   } catch (error) {
     console.error(error);
-    return JSON.parse(fs.readFileSync(`${languageFilesPath}/english.json`));
+    return JSON.parse(readFileSyncWithLimit(`${languageFilesPath}/english.json`));
   }
 }
 //////////////////////////////////////

@@ -17,7 +17,6 @@ const { readFileSyncWithLimit } = require('../general_');
 rc.post("/", async (req, res) => {
   //read from history first, if question asked before, pull the record,  
   ////
-
   //reading body
   let { q, fileHash, level } = req.body;
   //check user input
@@ -28,7 +27,6 @@ rc.post("/", async (req, res) => {
   if (req?.session?.userInfo) userId = req.session.userInfo.userId;
   // const {userId} = req?.session?.userInfo || null;
   const ret = await readReadingComprehensionHistory(fileHash, q, level);
-
   if (ret) {
     //record found
     if (userId) {
@@ -64,9 +62,10 @@ rc.post("/", async (req, res) => {
       ip_address: req.socket.remoteAddress
     });
     //reading related embedding file base on hash,
-    const embeddings = process_addressing_file(fileHash);
-    if (embeddings === false) throw new Error("embeddings file not found");
+    const embeddings = await process_addressing_file(fileHash);
+    if (!Array.isArray(embeddings)) throw new Error("embeddings file not found");
     //getting the similarity and repack the asnwer related text to context
+
     const context = process_with_similarity(embedding_q, embeddings).map(el => el.text).join("\n");
     //sending out the completion request to openai
     const completion = await chatCompletionForRC(q, context, max_token_for_completion, level);
@@ -121,10 +120,11 @@ async function process_addressing_file(filehash) {
   if (!fs.existsSync(folder_path) || !fs.existsSync(embedding_filename)) return false;
   try {
     //if file larger than 100m 
-    const { size, isFile } = fs.fstatSync(embedding_filename);
+    const { size, isFile } = fs.statSync(embedding_filename);
     if (!isFile) return false;
     if (size > 100_000_000) return false;
-    return JSON.parse(readFileSyncWithLimit(embedding_filename));
+    let file_content = readFileSyncWithLimit(embedding_filename);
+    return JSON.parse(file_content.toString());
   } catch (error) {
     console.error(error);
     return false;
@@ -137,6 +137,7 @@ function process_with_similarity(question_embedding, embeddings) {
   embeddings = embeddings.map(({ text, usage, embedding }) => {
     return { text, usage, embedding, similarity: cosineDistance(question_embedding.embedding, embedding) };
   })
+
   //sort embeddings with similarity
   embeddings.sort((a, b) => a.similarity > b.similarity ? -1 : 1);
   let [cur_len, cur_pointer] = [0, 0];

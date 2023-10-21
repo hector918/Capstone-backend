@@ -4,7 +4,8 @@ function readFileSyncWithLimit(file_path, size_limit = 10_000_000) {
   try {
     const { size } = fs.statSync(file_path);
     if (size > size_limit) throw new Error(`file: ${file_path} over size`);
-    return fs.readFileSync(file_path);
+    const content = fs.readFileSync(file_path, 'utf8');
+    return content;
   } catch (error) {
     console.error(error);
     return false

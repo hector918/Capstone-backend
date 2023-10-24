@@ -123,7 +123,7 @@ async function process_addressing_file(filehash) {
     const { size, isFile } = fs.statSync(embedding_filename);
     if (!isFile) return false;
     if (size > 100_000_000) return false;
-    let file_content = readFileSyncWithLimit(embedding_filename);
+    let file_content = readFileSyncWithLimit(embedding_filename, 50_000_000);
     return JSON.parse(file_content.toString());
   } catch (error) {
     console.error(error);

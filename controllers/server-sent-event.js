@@ -7,30 +7,34 @@ function listen_to_sse(response, stream_handler, onEnd) {
         const message = line.replace(/^data: /, '');
         if (message === '[DONE]') {
           //on end
-          stream_handler({onEnd: true});
-          if(onEnd) onEnd();
+          stream_handler({ onEnd: true });
+          if (onEnd) onEnd();
           return;
         }
         try {
+          if (message.trim() === "") continue;
+
           const parsed = JSON.parse(message);
-          const {content} = parsed?.choices[0]?.delta;
-          const {finish_reason} = parsed?.choices[0];
+          console.log(parsed);
+          const { content } = parsed?.choices[0]?.delta;
+          const { finish_reason } = parsed?.choices[0];
           //on data
-          stream_handler({data: {content, finish_reason}});
+          stream_handler({ data: { content, finish_reason } });
         } catch (error) {
           //on error
           console.error(error);
-          stream_handler(error);
+          //if open ai sent in error, ignore it
+          // stream_handler(error);
           return;
         }
       }
     });
   })
-  .catch(error => {
-    console.log("on sse error", error);
-    //on error
-    stream_handler(error);
-  });
+    .catch(error => {
+      console.log("on sse error", error);
+      //on error
+      stream_handler(error);
+    });
 }
 
 function hosting_sse(req, res) {
@@ -44,16 +48,16 @@ function hosting_sse(req, res) {
   });
   return (data) => {
     //check the responese here
-    if(data.data){
+    if (data.data) {
       //success
-      res.write(JSON.stringify(data)+ "\n");
-    }else if(data.onEnd){
+      res.write(JSON.stringify(data) + "\n");
+    } else if (data.onEnd) {
       //event end
-      res.write(JSON.stringify({data: "\n", onEnd: true}));
+      res.write(JSON.stringify({ data: "\n", onEnd: true }));
       res.end();
-    }else{
+    } else {
       //on error
-      res.status(500).write(JSON.stringify({error: data.message}));
+      res.status(500).write(JSON.stringify({ error: data.message }));
       res.end();
     }
   }

@@ -22,7 +22,7 @@
     "openai": "^4.14.0",
     "pdf-parse": "^1.1.1",
     "pdf2pic": "^2.2.1",
-    "pdfjs-dist": "^3.8.162",
+    "pdfjs-dist": "^4.2.67",
     "pg-promise": "^11.4.3",
     "session-file-store": "^1.5.0"
   },
